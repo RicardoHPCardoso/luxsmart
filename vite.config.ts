@@ -25,7 +25,8 @@ export default defineConfig({
     target: 'es2022',
   },
   test: {
-    environment: 'jsdom',
+    // Testes de lógica rodam em Node; testes de componente declaram `@vitest-environment jsdom`.
+    environment: 'node',
     include: ['src/**/*.test.{ts,tsx}'],
     restoreMocks: true,
   },
