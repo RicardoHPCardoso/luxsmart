@@ -1,6 +1,6 @@
 import { PerformanceMonitor, Stars } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState, type RefObject } from 'react';
 import {
   Color,
   Vector3,
@@ -36,6 +36,11 @@ interface HeroSceneProps {
   ativo: boolean;
   /** Chamado quando a cena está pronta para aparecer. */
   aoPronto?: () => void;
+  /**
+   * Elemento que capta o ponteiro (o hero inteiro). Sem isso, o texto sobre
+   * o canvas bloquearia os eventos e o parallax só funcionaria nas bordas.
+   */
+  fonteEventos?: RefObject<HTMLElement | null>;
 }
 
 /** Faixa de densidade de pixels: nítido em telas retina, mas com teto para manter 60 fps. */
@@ -46,7 +51,7 @@ const DPR_MAXIMO = 1.75;
  * em sequência. Carregada sob demanda (React.lazy) — este arquivo e o three.js
  * ficam fora do bundle inicial.
  */
-export default function HeroScene({ modo, ativo, aoPronto }: HeroSceneProps) {
+export default function HeroScene({ modo, ativo, aoPronto, fonteEventos }: HeroSceneProps) {
   const [dpr, setDpr] = useState(DPR_MAXIMO);
 
   return (
@@ -57,6 +62,8 @@ export default function HeroScene({ modo, ativo, aoPronto }: HeroSceneProps) {
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       camera={{ fov: CAMERA.fov, position: [...CAMERA.larga.posicao], near: 0.1, far: 300 }}
       onCreated={() => aoPronto?.()}
+      eventSource={fonteEventos}
+      eventPrefix="client"
     >
       {/* Se o FPS cair, reduz a resolução em vez de travar a animação. */}
       <PerformanceMonitor onDecline={() => setDpr(1)} onIncline={() => setDpr(DPR_MAXIMO)} />

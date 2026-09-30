@@ -7,7 +7,7 @@ import { SITE } from '@/data/site';
 
 export function Team() {
   return (
-    <Section id={SECOES.equipe} tema="dia">
+    <Section id={SECOES.equipe} tema="dia" transicao="da-noite">
       <div className="container-site">
         <SectionHeading
           sobretitulo="Equipe"

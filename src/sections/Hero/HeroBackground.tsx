@@ -1,5 +1,5 @@
 import { useInView, useReducedMotion } from 'framer-motion';
-import { lazy, Suspense, useRef, useState } from 'react';
+import { lazy, Suspense, useRef, useState, type RefObject } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { NightStreet } from '@/components/illustrations/NightStreet';
 import type { ModoCeu } from '@/components/ui/DayNightToggle';
@@ -19,6 +19,8 @@ const MIDIA_3D = '(min-width: 48rem)';
 
 interface HeroBackgroundProps {
   modo: ModoCeu;
+  /** Elemento que recebe o ponteiro para o parallax da câmera (o hero inteiro). */
+  fonteEventos: RefObject<HTMLElement | null>;
 }
 
 /**
@@ -27,7 +29,7 @@ interface HeroBackgroundProps {
  * com um fade quando está pronta. Sem WebGL ou com movimento reduzido,
  * fica só a ilustração.
  */
-export function HeroBackground({ modo }: HeroBackgroundProps) {
+export function HeroBackground({ modo, fonteEventos }: HeroBackgroundProps) {
   const container = useRef<HTMLDivElement>(null);
   const reduzirMovimento = useReducedMotion();
   const telaGrande = useMediaQuery(MIDIA_3D);
@@ -50,7 +52,12 @@ export function HeroBackground({ modo }: HeroBackgroundProps) {
                 cenaPronta ? 'opacity-100' : 'opacity-0',
               )}
             >
-              <HeroScene modo={modo} ativo={visivel} aoPronto={() => setCenaPronta(true)} />
+              <HeroScene
+                modo={modo}
+                ativo={visivel}
+                fonteEventos={fonteEventos}
+                aoPronto={() => setCenaPronta(true)}
+              />
             </div>
           </Suspense>
         </ErrorBoundary>

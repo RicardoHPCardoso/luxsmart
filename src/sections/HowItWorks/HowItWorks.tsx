@@ -148,15 +148,21 @@ function DescricaoEtapa({ etapa }: { etapa: Etapa }) {
 function EtapasEstaticas() {
   return (
     <div className="container-site py-14 sm:py-20">
-      <ol className="grid gap-6 lg:grid-cols-3" role="list">
+      <ol className="grid gap-14" role="list">
         {ETAPAS.map((etapa, i) => (
-          <Reveal as="li" key={etapa.id} className="flex flex-col gap-4">
-            <LampPanel etapa={etapa} className="h-64" />
-            <h3 className="text-xl font-bold">
-              {i + 1}. {etapa.titulo} <span className="text-amarelo-luz">· {etapa.resumo}</span>
-            </h3>
-            <p className="text-nevoa">{etapa.descricao}</p>
-            <FlowDiagram etapa={etapa} />
+          <Reveal
+            as="li"
+            key={etapa.id}
+            className="grid items-center gap-6 md:grid-cols-[0.9fr_1.1fr] md:gap-10"
+          >
+            <LampPanel etapa={etapa} className="h-64 md:h-80" />
+            <div className="flex flex-col gap-4">
+              <h3 className="text-xl font-bold sm:text-2xl">
+                {i + 1}. {etapa.titulo} <span className="text-amarelo-luz">· {etapa.resumo}</span>
+              </h3>
+              <p className="text-nevoa">{etapa.descricao}</p>
+              <FlowDiagram etapa={etapa} />
+            </div>
           </Reveal>
         ))}
       </ol>

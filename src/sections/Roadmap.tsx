@@ -27,7 +27,7 @@ export function Roadmap() {
   const progresso = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
   return (
-    <Section id={SECOES.roadmap} tema="noite">
+    <Section id={SECOES.roadmap} tema="noite" transicao="do-dia">
       <div className="container-site grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
         <SectionHeading
           tema="noite"

@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 import { ButtonLink } from '@/components/ui/Button';
 import { DayNightToggle, type ModoCeu } from '@/components/ui/DayNightToggle';
 import { INDAIATUBA } from '@/data/indaiatuba';
@@ -6,6 +7,7 @@ import { SECOES } from '@/data/navegacao';
 import { useModoCeu } from '@/hooks/modoCeu';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { cn } from '@/lib/cn';
+import { CursorHalo } from './CursorHalo';
 import { HeroBackground } from './HeroBackground';
 
 const STATUS_MODO: Record<ModoCeu, string> = {
@@ -23,9 +25,17 @@ export function Hero() {
   const { modo, definirModo } = useModoCeu();
   const { aoClicarAncora } = useScrollTo();
   const noite = modo === 'noite';
+  const secao = useRef<HTMLElement>(null);
+
+  // Ao rolar para fora do hero, o texto sobe devagar e esmaece (parallax leve).
+  const reduzirMovimento = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: secao, offset: ['start start', 'end start'] });
+  const yConteudo = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const opacidadeConteudo = useTransform(scrollYProgress, [0, 0.8], [1, 0.15]);
 
   return (
     <section
+      ref={secao}
       id={SECOES.inicio}
       className={cn(
         'relative isolate flex min-h-dvh items-end overflow-hidden pt-24 pb-16 transition-colors duration-1000 sm:items-center sm:pb-24',
@@ -34,7 +44,7 @@ export function Hero() {
     >
       {/* Cena de fundo */}
       <div className="absolute inset-0 -z-10">
-        <HeroBackground modo={modo} />
+        <HeroBackground modo={modo} fonteEventos={secao} />
         {/* Véu para legibilidade do texto (não intercepta o ponteiro: o 3D reage a ele) */}
         <div
           className={cn(
@@ -47,7 +57,10 @@ export function Hero() {
         />
       </div>
 
-      <div className="container-site">
+      <motion.div
+        className="container-site"
+        style={reduzirMovimento ? undefined : { y: yConteudo, opacity: opacidadeConteudo }}
+      >
         <div className="max-w-2xl">
           <motion.p
             {...entrada(0.1)}
@@ -112,9 +125,10 @@ export function Hero() {
             </p>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       <IndicadorRolagem noite={noite} />
+      <CursorHalo area={secao} />
     </section>
   );
 }

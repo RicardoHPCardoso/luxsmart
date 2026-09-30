@@ -25,7 +25,7 @@ export function Simulator() {
   const resumoAnunciado = useDebouncedValue(resumo, ATRASO_ANUNCIO_MS);
 
   return (
-    <Section id={SECOES.simulador} tema="branco">
+    <Section id={SECOES.simulador} tema="branco" transicao="da-noite">
       <div className="container-site">
         <SectionHeading
           sobretitulo="Simulador"

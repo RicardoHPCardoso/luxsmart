@@ -145,7 +145,11 @@ function Conector({ ativo }: { ativo: boolean }) {
         y2={ALTURA_CONECTOR}
         strokeWidth="2.5"
         strokeDasharray="6 6"
-        className={cn(ativo ? 'animate-fluxo stroke-amarelo-luz' : 'stroke-linha-noite')}
+        className={cn(
+          ativo
+            ? 'animate-fluxo stroke-amarelo-luz motion-reduce:animate-none'
+            : 'stroke-linha-noite',
+        )}
       />
     </svg>
   );
@@ -173,7 +177,11 @@ function ConectorJuncao({ esquerda, direita }: { esquerda: boolean; direita: boo
           strokeWidth="2.5"
           strokeDasharray="6 6"
           vectorEffect="non-scaling-stroke"
-          className={cn(ativo ? 'animate-fluxo stroke-amarelo-luz' : 'stroke-linha-noite')}
+          className={cn(
+            ativo
+              ? 'animate-fluxo stroke-amarelo-luz motion-reduce:animate-none'
+              : 'stroke-linha-noite',
+          )}
         />
       ))}
     </svg>

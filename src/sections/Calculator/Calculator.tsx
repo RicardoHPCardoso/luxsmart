@@ -55,7 +55,7 @@ export function Calculator() {
   const resumoAnunciado = useDebouncedValue(resumo, ATRASO_ANUNCIO_MS);
 
   return (
-    <Section id={SECOES.calculadora} tema="noite">
+    <Section id={SECOES.calculadora} tema="noite" transicao="do-dia">
       <div className="container-site">
         <SectionHeading
           tema="noite"

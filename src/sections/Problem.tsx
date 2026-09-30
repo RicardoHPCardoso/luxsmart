@@ -2,6 +2,7 @@ import { EmptyStreet } from '@/components/illustrations/EmptyStreet';
 import { Section } from '@/components/layout/Section';
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber';
 import { EstimateBadge } from '@/components/ui/EstimateBadge';
+import { Parallax } from '@/components/ui/Parallax';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { StatCard } from '@/components/ui/StatCard';
@@ -100,7 +101,9 @@ export function Problem() {
 
         <Reveal className="mt-14">
           <figure className="relative">
-            <EmptyStreet className="h-auto w-full" />
+            <Parallax intensidade={24}>
+              <EmptyStreet className="h-auto w-full" />
+            </Parallax>
             <figcaption className="mt-5 sm:absolute sm:inset-x-0 sm:bottom-0 sm:mt-0 sm:rounded-b-3xl sm:bg-[linear-gradient(to_top,rgb(5_13_28/0.95),transparent)] sm:p-8 sm:pt-16">
               <p className="font-display text-2xl font-bold text-white lg:text-4xl">
                 “Energia paga para iluminar{' '}

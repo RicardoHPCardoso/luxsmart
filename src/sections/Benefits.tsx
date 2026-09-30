@@ -14,7 +14,7 @@ const FAIXA_PRESENCA = '-30% 0px -30% 0px';
 
 export function Benefits() {
   return (
-    <Section id={SECOES.beneficios} tema="branco">
+    <Section id={SECOES.beneficios} tema="branco" transicao="da-noite">
       <div className="container-site">
         <SectionHeading
           sobretitulo="Benefícios"
