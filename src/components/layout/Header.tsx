@@ -51,7 +51,7 @@ export function Header() {
       className={cn(
         'tema-noite fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300',
         comFundo || menuAberto
-          ? 'bg-azul-noite/85 shadow-[0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-md'
+          ? 'bg-azul-noite/95 shadow-[0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-md'
           : 'bg-transparent',
       )}
     >

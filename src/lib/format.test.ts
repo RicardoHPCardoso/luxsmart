@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   formatarAnos,
   formatarCompacto,
+  formatarDadoReferencia,
   formatarEnergia,
   formatarHoras,
   formatarMoeda,
@@ -50,5 +51,21 @@ describe('formatação pt-BR', () => {
     expect(formatarAnos(1)).toBe('1 ano');
     expect(formatarAnos(0.5)).toBe('6 meses');
     expect(formatarAnos(Infinity)).toBe('sem retorno');
+  });
+});
+
+describe('formatarDadoReferencia', () => {
+  it('usa a unidade para escolher o formato', () => {
+    expect(formatarDadoReferencia({ valor: 0.3, unidade: '% da potência' })).toBe('30%');
+    expect(formatarDadoReferencia({ valor: 0.9, unidade: '%' })).toBe('90%');
+    expect(n(formatarDadoReferencia({ valor: 0.5, unidade: 'R$/kWh' }))).toBe('R$ 0,50/kWh');
+    expect(n(formatarDadoReferencia({ valor: 400, unidade: 'R$/ponto' }))).toBe('R$ 400 por ponto');
+    expect(formatarDadoReferencia({ valor: 11 + 52 / 60, unidade: 'h/noite' })).toBe(
+      '11h52min por noite',
+    );
+    expect(formatarDadoReferencia({ valor: 84, unidade: 'W' })).toBe('84 W');
+    expect(formatarDadoReferencia({ valor: 28000, unidade: 'pontos' })).toBe('28.000 pontos');
+    expect(formatarDadoReferencia({ valor: 0.04, unidade: 'kg CO₂/kWh' })).toBe('0,04 kg CO₂/kWh');
+    expect(formatarDadoReferencia({ valor: [1, 0.5], unidade: 'peso' })).toBe('1 · 0,5');
   });
 });

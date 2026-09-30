@@ -3,7 +3,8 @@
  * `energy.ts`. Recebe os dados como parâmetro para continuar testável.
  */
 import type { DadosCidade, FiltroVia, TipoVia } from '@/data/indaiatuba';
-import { TIPOS_VIA } from '@/data/indaiatuba';
+import { ROTULO_VIA, TIPOS_VIA } from '@/data/indaiatuba';
+import type { DadoReferencia } from '@/data/tipos';
 import {
   compararCenarios,
   somarComparacoes,
@@ -87,4 +88,39 @@ export function parametrosEquivalentesCidade(dados: DadosCidade): ParametrosEqui
     potenciaMediaW: pontos === 0 ? 0 : potenciaTotal / pontos,
     movimentoEquivalente: potenciaTotal === 0 ? 0 : potenciaComMovimento / potenciaTotal,
   };
+}
+
+export interface GrupoDadosReferencia {
+  titulo: string;
+  dados: ReadonlyArray<DadoReferencia<number | readonly number[]>>;
+}
+
+/** Todos os dados de referência, agrupados, para a tabela de metodologia. */
+export function listarDadosReferencia(dados: DadosCidade): GrupoDadosReferencia[] {
+  return [
+    {
+      titulo: 'Rede e operação',
+      dados: [
+        dados.pontosLed,
+        dados.percentualLed,
+        dados.totalPontos,
+        dados.horasPorNoite,
+        dados.tarifa,
+        dados.fatorEmissao,
+      ],
+    },
+    {
+      titulo: 'Premissas do LuxSmart',
+      dados: [dados.dimerizacao, dados.custoKit, dados.perfilMovimentoNoturno],
+    },
+    ...TIPOS_VIA.map((via) => ({
+      titulo: ROTULO_VIA[via],
+      dados: [
+        dados.vias[via].potenciaLed,
+        dados.vias[via].potenciaVaporSodio,
+        dados.vias[via].movimento,
+        dados.vias[via].participacao,
+      ],
+    })),
+  ];
 }

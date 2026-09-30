@@ -5,7 +5,14 @@ import { Section } from '@/components/layout/Section';
 import { SkipLink } from '@/components/layout/SkipLink';
 import { SmoothScroll } from '@/components/layout/SmoothScroll';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { NAVEGACAO, SECOES } from '@/data/navegacao';
+import { SECOES } from '@/data/navegacao';
+import { Benefits } from '@/sections/Benefits';
+import { Hero } from '@/sections/Hero/Hero';
+import { HowItWorks } from '@/sections/HowItWorks/HowItWorks';
+import { Methodology } from '@/sections/Methodology';
+import { Problem } from '@/sections/Problem';
+import { Roadmap } from '@/sections/Roadmap';
+import { Team } from '@/sections/Team';
 
 export default function App() {
   return (
@@ -14,22 +21,28 @@ export default function App() {
         <SkipLink />
         <Header />
         <main id="conteudo" tabIndex={-1}>
-          <Section id={SECOES.inicio} tema="noite" className="flex min-h-dvh items-center">
+          <Hero />
+          <Problem />
+          <HowItWorks />
+          <Section id={SECOES.simulador} tema="noite">
             <div className="container-site">
-              <h1 className="text-5xl font-bold">LuxSmart</h1>
+              <SectionHeading tema="noite" sobretitulo="Simulador" titulo="Em construção" />
             </div>
           </Section>
-          {NAVEGACAO.map((item, i) => (
-            <Section key={item.id} id={item.id} tema={i % 2 === 0 ? 'noite' : 'dia'}>
-              <div className="container-site">
-                <SectionHeading
-                  sobretitulo={item.rotulo}
-                  titulo={item.rotulo}
-                  tema={i % 2 === 0 ? 'noite' : 'dia'}
-                />
-              </div>
-            </Section>
-          ))}
+          <Section id={SECOES.dashboard} tema="dia">
+            <div className="container-site">
+              <SectionHeading sobretitulo="Indaiatuba" titulo="Em construção" />
+            </div>
+          </Section>
+          <Section id={SECOES.calculadora} tema="dia">
+            <div className="container-site">
+              <SectionHeading sobretitulo="Calculadora" titulo="Em construção" />
+            </div>
+          </Section>
+          <Benefits />
+          <Roadmap />
+          <Team />
+          <Methodology />
         </main>
         <Footer />
       </SmoothScroll>

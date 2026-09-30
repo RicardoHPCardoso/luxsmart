@@ -79,3 +79,31 @@ export function formatarAnos(anos: number): string {
   }
   return `${formatarNumero(anos, 1)} ${anos < 2 ? 'ano' : 'anos'}`;
 }
+
+/**
+ * Formata um dado de referência de acordo com a unidade declarada em
+ * `data/indaiatuba.ts` (usado na tabela da seção de metodologia).
+ */
+export function formatarDadoReferencia(dado: {
+  valor: number | readonly number[];
+  unidade: string;
+}): string {
+  const { valor, unidade } = dado;
+  if (typeof valor !== 'number') return valor.map((v) => formatarNumero(v, 2)).join(' · ');
+
+  if (unidade === '%' || unidade.startsWith('% ')) return formatarPercentual(valor);
+  switch (unidade) {
+    case 'R$/kWh':
+      return `${formatarMoeda(valor, { centavos: true })}/kWh`;
+    case 'R$/ponto':
+      return `${formatarMoeda(valor)} por ponto`;
+    case 'h/noite':
+      return `${formatarHoras(valor)} por noite`;
+    case 'W':
+      return `${formatarNumero(valor)} W`;
+    case 'pontos':
+      return `${formatarNumero(valor)} pontos`;
+    default:
+      return `${formatarNumero(valor, 3)} ${unidade}`;
+  }
+}
