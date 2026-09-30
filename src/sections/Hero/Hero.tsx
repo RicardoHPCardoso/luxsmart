@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { NightStreet } from '@/components/illustrations/NightStreet';
 import { ButtonLink } from '@/components/ui/Button';
 import { DayNightToggle, type ModoCeu } from '@/components/ui/DayNightToggle';
 import { INDAIATUBA } from '@/data/indaiatuba';
 import { SECOES } from '@/data/navegacao';
+import { useModoCeu } from '@/hooks/modoCeu';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { cn } from '@/lib/cn';
+import { HeroBackground } from './HeroBackground';
 
 const STATUS_MODO: Record<ModoCeu, string> = {
   noite: `Noite: os postes ficam em ${Math.round(INDAIATUBA.dimerizacao.valor * 100)}% e acendem a 100% quando o carro passa.`,
@@ -20,7 +20,7 @@ const entrada = (atraso: number) => ({
 });
 
 export function Hero() {
-  const [modo, setModo] = useState<ModoCeu>('noite');
+  const { modo, definirModo } = useModoCeu();
   const { aoClicarAncora } = useScrollTo();
   const noite = modo === 'noite';
 
@@ -34,11 +34,11 @@ export function Hero() {
     >
       {/* Cena de fundo */}
       <div className="absolute inset-0 -z-10">
-        <NightStreet modo={modo} className="size-full" />
-        {/* Véu para legibilidade do texto */}
+        <HeroBackground modo={modo} />
+        {/* Véu para legibilidade do texto (não intercepta o ponteiro: o 3D reage a ele) */}
         <div
           className={cn(
-            'absolute inset-0 transition-opacity duration-1000',
+            'pointer-events-none absolute inset-0 transition-opacity duration-1000',
             'bg-[linear-gradient(to_top,var(--veu)_50%,transparent_95%)] sm:bg-[linear-gradient(to_right,var(--veu)_30%,transparent_75%)]',
           )}
           style={{
@@ -103,7 +103,7 @@ export function Hero() {
           </motion.div>
 
           <motion.div {...entrada(0.65)} className="mt-10 flex flex-col gap-2">
-            <DayNightToggle modo={modo} aoAlterar={setModo} />
+            <DayNightToggle modo={modo} aoAlterar={definirModo} />
             <p
               className={cn('text-sm', noite ? 'text-nevoa' : 'text-tinta-suave')}
               aria-live="polite"

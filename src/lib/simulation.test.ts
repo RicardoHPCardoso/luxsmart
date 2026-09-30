@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   adicionarAgente,
   aproximar,
+  atualizarPoste,
   consumoInstantaneo,
   criarEstadoInicial,
   criarPostes,
@@ -128,5 +129,21 @@ describe('consumoInstantaneo', () => {
     const umAceso = e.postes.map((p, i) => (i === 0 ? { ...p, nivel: 1 } : p));
     expect(consumoInstantaneo(umAceso, CFG.potenciaW).acesosTotal).toBe(1);
     expect(consumoInstantaneo([], CFG.potenciaW).fracao).toBe(0);
+  });
+});
+
+describe('atualizarPoste', () => {
+  const poste = criarPostes(1, 100, CFG.dimerizacao)[0]!;
+
+  it('de dia o sensor de luminosidade desliga a luz, mesmo com movimento', () => {
+    let p = { ...poste, nivel: 1 };
+    for (let i = 0; i < 120; i++) p = atualizarPoste(p, true, 1 / 60, CFG, true);
+    expect(p.nivel).toBe(0);
+  });
+
+  it('à noite, movimento leva a 100%', () => {
+    const p = atualizarPoste(poste, true, 1, CFG);
+    expect(p.nivel).toBe(1);
+    expect(p.semMovimentoHa).toBe(0);
   });
 });

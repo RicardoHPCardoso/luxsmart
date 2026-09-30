@@ -137,6 +137,30 @@ function agenteAtivo(a: Agente, cfg: ConfigSimulacao): boolean {
   return a.x >= -cfg.margem - 1 && a.x <= cfg.comprimentoRua + cfg.margem + 1;
 }
 
+/** Parâmetros que controlam a luz de um poste. */
+export type RegraPoste = Pick<
+  ConfigSimulacao,
+  'tempoEsperaS' | 'rampaSubidaPorS' | 'rampaDescidaPorS' | 'dimerizacao'
+>;
+
+/**
+ * Atualiza um poste: 100% com movimento ou durante o tempo de espera, nível
+ * econômico no resto do tempo. Com `dia = true` o sensor de luminosidade
+ * manda desligar (alvo 0). Também usada pela cena 3D do hero.
+ */
+export function atualizarPoste(
+  poste: EstadoPoste,
+  detectando: boolean,
+  dt: number,
+  regra: RegraPoste,
+  dia = false,
+): EstadoPoste {
+  const semMovimentoHa = detectando ? 0 : poste.semMovimentoHa + dt;
+  const alvo = dia ? 0 : detectando || semMovimentoHa < regra.tempoEsperaS ? 1 : regra.dimerizacao;
+  const nivel = aproximar(poste.nivel, alvo, regra.rampaSubidaPorS, regra.rampaDescidaPorS, dt);
+  return { ...poste, detectando, semMovimentoHa, nivel };
+}
+
 /** Avança a simulação em `dt` segundos. */
 export function passo(estado: EstadoSimulacao, dt: number, cfg: ConfigSimulacao): EstadoSimulacao {
   const agentes = estado.agentes
@@ -145,13 +169,9 @@ export function passo(estado: EstadoSimulacao, dt: number, cfg: ConfigSimulacao)
     )
     .filter((a) => agenteAtivo(a, cfg));
 
-  const postes = estado.postes.map((p) => {
-    const detectando = detecta(p, agentes, cfg.raioDeteccao);
-    const semMovimentoHa = detectando ? 0 : p.semMovimentoHa + dt;
-    const alvo = detectando || semMovimentoHa < cfg.tempoEsperaS ? 1 : cfg.dimerizacao;
-    const nivel = aproximar(p.nivel, alvo, cfg.rampaSubidaPorS, cfg.rampaDescidaPorS, dt);
-    return { ...p, detectando, semMovimentoHa, nivel };
-  });
+  const postes = estado.postes.map((p) =>
+    atualizarPoste(p, detecta(p, agentes, cfg.raioDeteccao), dt, cfg),
+  );
 
   return { ...estado, tempo: estado.tempo + dt, agentes, postes };
 }

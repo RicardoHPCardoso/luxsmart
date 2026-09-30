@@ -10,6 +10,7 @@ import { useEffect, useId, useState, type MouseEvent } from 'react';
 import { Logo } from '@/components/brand/Logo';
 import { NAVEGACAO, SECOES } from '@/data/navegacao';
 import { useActiveSection } from '@/hooks/useActiveSection';
+import { useModoCeu } from '@/hooks/modoCeu';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { cn } from '@/lib/cn';
 
@@ -28,6 +29,9 @@ export function Header() {
   const idMenu = useId();
   const secaoAtiva = useActiveSection(IDS_SECOES);
   const { aoClicarAncora } = useScrollTo();
+  const { modo } = useModoCeu();
+  // Transparente sobre o hero em modo dia: textos escuros para contrastar com o céu claro.
+  const sobreCeuDia = modo === 'dia' && !comFundo && !menuAberto;
 
   const progresso = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
   const brilhoLogo = useTransform(scrollYProgress, [0, 1], [0.35, 1]);
@@ -49,7 +53,8 @@ export function Header() {
   return (
     <header
       className={cn(
-        'tema-noite fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300',
+        'fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300',
+        sobreCeuDia ? 'tema-dia' : 'tema-noite',
         comFundo || menuAberto
           ? 'bg-azul-noite/95 shadow-[0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-md'
           : 'bg-transparent',
@@ -68,7 +73,7 @@ export function Header() {
           className="rounded-lg"
           aria-label="LuxSmart — voltar ao início"
         >
-          <Logo brilho={brilhoLogo} />
+          <Logo brilho={brilhoLogo} tema={sobreCeuDia ? 'dia' : 'noite'} />
         </a>
 
         <nav aria-label="Principal" className="hidden lg:block">
@@ -80,8 +85,10 @@ export function Header() {
                   onClick={navegar}
                   aria-current={secaoAtiva === item.id ? 'location' : undefined}
                   className={cn(
-                    'relative rounded-full px-3 py-2 text-sm font-medium text-nevoa transition-colors hover:text-white',
-                    'aria-[current=location]:text-white',
+                    'relative rounded-full px-3 py-2 text-sm font-medium transition-colors',
+                    sobreCeuDia
+                      ? 'text-tinta-suave hover:text-tinta aria-[current=location]:text-tinta'
+                      : 'text-nevoa hover:text-white aria-[current=location]:text-white',
                   )}
                 >
                   {item.rotulo}
@@ -100,7 +107,10 @@ export function Header() {
 
         <button
           type="button"
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-white lg:hidden"
+          className={cn(
+            'inline-flex min-h-11 min-w-11 items-center justify-center rounded-full lg:hidden',
+            sobreCeuDia ? 'text-tinta' : 'text-white',
+          )}
           aria-expanded={menuAberto}
           aria-controls={idMenu}
           onClick={() => setMenuAberto((aberto) => !aberto)}
