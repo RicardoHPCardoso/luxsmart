@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  escalaEnergia,
+  escalaPotencia,
   formatarAnos,
   formatarCompacto,
   formatarDadoReferencia,
@@ -38,6 +40,7 @@ describe('formatação pt-BR', () => {
     expect(formatarEnergia(850)).toBe('850 kWh');
     expect(formatarEnergia(12_300)).toBe('12,3 MWh');
     expect(formatarEnergia(12_300_000)).toBe('12,3 GWh');
+    expect(formatarEnergia(7_000_000)).toBe('7,0 GWh');
   });
 
   it('horas decimais em h/min', () => {
@@ -67,5 +70,19 @@ describe('formatarDadoReferencia', () => {
     expect(formatarDadoReferencia({ valor: 28000, unidade: 'pontos' })).toBe('28.000 pontos');
     expect(formatarDadoReferencia({ valor: 0.04, unidade: 'kg CO₂/kWh' })).toBe('0,04 kg CO₂/kWh');
     expect(formatarDadoReferencia({ valor: [1, 0.5], unidade: 'peso' })).toBe('1 · 0,5');
+  });
+});
+
+describe('escalas de eixo', () => {
+  it('energia: kWh, MWh ou GWh conforme o maior valor', () => {
+    expect(escalaEnergia(500)).toEqual({ divisor: 1, unidade: 'kWh' });
+    expect(escalaEnergia(25_000)).toEqual({ divisor: 1e3, unidade: 'MWh' });
+    expect(escalaEnergia(26_000_000)).toEqual({ divisor: 1e6, unidade: 'GWh' });
+  });
+
+  it('potência: W, kW ou MW conforme o maior valor', () => {
+    expect(escalaPotencia(0.5)).toEqual({ divisor: 1e-3, unidade: 'W' });
+    expect(escalaPotencia(250)).toEqual({ divisor: 1, unidade: 'kW' });
+    expect(escalaPotencia(2_950)).toEqual({ divisor: 1e3, unidade: 'MW' });
   });
 });

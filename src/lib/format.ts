@@ -7,6 +7,10 @@ const LOCALE = 'pt-BR';
 
 const inteiro = new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 });
 const umaCasa = new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 1 });
+const umaCasaFixa = new Intl.NumberFormat(LOCALE, {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
 const compacto = new Intl.NumberFormat(LOCALE, { notation: 'compact', maximumFractionDigits: 1 });
 const moeda = new Intl.NumberFormat(LOCALE, {
   style: 'currency',
@@ -52,11 +56,19 @@ const ESCALAS_ENERGIA = [
   { limite: 1e3, divisor: 1e3, unidade: 'MWh' },
 ] as const;
 
-/** Energia com unidade legível: 12_300_000 kWh → "12,3 GWh". */
+/**
+ * Energia com unidade legível e uma casa decimal fixa (para comparar valores
+ * lado a lado): 12_300_000 kWh → "12,3 GWh"; 7_000_000 → "7,0 GWh".
+ */
 export function formatarEnergia(kwh: number): string {
   const escala = ESCALAS_ENERGIA.find((e) => Math.abs(kwh) >= e.limite);
   if (!escala) return `${formatarNumero(kwh)} kWh`;
-  return `${formatarNumero(kwh / escala.divisor, 1)} ${escala.unidade}`;
+  return `${umaCasaFixa.format(kwh / escala.divisor)} ${escala.unidade}`;
+}
+
+/** Número com exatamente uma casa decimal: 7 → "7,0". */
+export function formatarUmaCasa(valor: number): string {
+  return umaCasaFixa.format(valor);
 }
 
 /** 11.8667 → "11h52min". */
@@ -106,4 +118,26 @@ export function formatarDadoReferencia(dado: {
     default:
       return `${formatarNumero(valor, 3)} ${unidade}`;
   }
+}
+
+export interface Escala {
+  divisor: number;
+  unidade: string;
+}
+
+/**
+ * Escolhe a unidade de energia para um eixo de gráfico a partir do maior valor
+ * (em kWh), para que os rótulos fiquem curtos: kWh, MWh ou GWh.
+ */
+export function escalaEnergia(maiorKwh: number): Escala {
+  if (maiorKwh >= 1e6) return { divisor: 1e6, unidade: 'GWh' };
+  if (maiorKwh >= 1e3) return { divisor: 1e3, unidade: 'MWh' };
+  return { divisor: 1, unidade: 'kWh' };
+}
+
+/** Escolhe a unidade de potência para um eixo a partir do maior valor (em kW). */
+export function escalaPotencia(maiorKw: number): Escala {
+  if (maiorKw >= 1e3) return { divisor: 1e3, unidade: 'MW' };
+  if (maiorKw >= 1) return { divisor: 1, unidade: 'kW' };
+  return { divisor: 1e-3, unidade: 'W' };
 }

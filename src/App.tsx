@@ -7,6 +7,8 @@ import { SmoothScroll } from '@/components/layout/SmoothScroll';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { SECOES } from '@/data/navegacao';
 import { Benefits } from '@/sections/Benefits';
+import { Calculator } from '@/sections/Calculator/Calculator';
+import { Dashboard } from '@/sections/Dashboard/Dashboard';
 import { Hero } from '@/sections/Hero/Hero';
 import { HowItWorks } from '@/sections/HowItWorks/HowItWorks';
 import { Methodology } from '@/sections/Methodology';
@@ -24,21 +26,13 @@ export default function App() {
           <Hero />
           <Problem />
           <HowItWorks />
-          <Section id={SECOES.simulador} tema="noite">
+          <Section id={SECOES.simulador} tema="branco">
             <div className="container-site">
-              <SectionHeading tema="noite" sobretitulo="Simulador" titulo="Em construção" />
+              <SectionHeading sobretitulo="Simulador" titulo="Em construção" />
             </div>
           </Section>
-          <Section id={SECOES.dashboard} tema="dia">
-            <div className="container-site">
-              <SectionHeading sobretitulo="Indaiatuba" titulo="Em construção" />
-            </div>
-          </Section>
-          <Section id={SECOES.calculadora} tema="dia">
-            <div className="container-site">
-              <SectionHeading sobretitulo="Calculadora" titulo="Em construção" />
-            </div>
-          </Section>
+          <Dashboard />
+          <Calculator />
           <Benefits />
           <Roadmap />
           <Team />

@@ -135,6 +135,14 @@
     background: transparent;
     cursor: pointer;
     --progresso: 50%;
+    --trilho: var(--color-azul-claro);
+    --preenchimento: var(--color-azul-primario);
+  }
+
+  /* Em fundo escuro: trilho com contraste ≥ 3:1 e preenchimento amarelo (a luz). */
+  .tema-noite .slider {
+    --trilho: #5a6f96;
+    --preenchimento: var(--color-amarelo-luz);
   }
 
   .slider::-webkit-slider-runnable-track {
@@ -142,21 +150,21 @@
     border-radius: 999px;
     background: linear-gradient(
       to right,
-      var(--color-azul-primario) var(--progresso),
-      var(--color-azul-claro) var(--progresso)
+      var(--preenchimento) var(--progresso),
+      var(--trilho) var(--progresso)
     );
   }
 
   .slider::-moz-range-track {
     height: 0.5rem;
     border-radius: 999px;
-    background: var(--color-azul-claro);
+    background: var(--trilho);
   }
 
   .slider::-moz-range-progress {
     height: 0.5rem;
     border-radius: 999px;
-    background: var(--color-azul-primario);
+    background: var(--preenchimento);
   }
 
   .slider::-webkit-slider-thumb {
