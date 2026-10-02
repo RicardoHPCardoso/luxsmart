@@ -11,5 +11,5 @@ export const SITE = {
   instituicao: 'UNIMAX',
   ano: 2026,
   /** URL do repositório do projeto (deixe vazio para ocultar o link). */
-  repositorio: '',
+  repositorio: 'https://github.com/RicardoHPCardoso/luxsmart',
 } as const;

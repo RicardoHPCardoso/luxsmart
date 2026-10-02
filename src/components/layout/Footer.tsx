@@ -46,6 +46,7 @@ export function Footer() {
                   target="_blank"
                 >
                   Repositório no GitHub
+                  <span className="sr-only"> (abre em nova aba)</span>
                 </a>
               </li>
             )}
