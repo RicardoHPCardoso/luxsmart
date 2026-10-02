@@ -13,7 +13,7 @@ export function Footer() {
           <Logo />
           <p className="mt-4 text-nevoa">{SITE.descricao}</p>
           <p className="mt-6 text-sm text-nevoa">
-            Projeto acadêmico · {SITE.instituicao} · {SITE.cidade} · {SITE.ano}
+            Projeto acadêmico · {SITE.curso} · {SITE.instituicao} · {SITE.cidade} · {SITE.ano}
           </p>
           <p className="mt-2 text-sm text-nevoa">
             Os valores apresentados são estimativas para fins educacionais. Veja a seção de

@@ -34,8 +34,8 @@ export function Simulator() {
             <p>
               Uma rua residencial com {CONFIG_SIMULADOR.quantidadePostes} postes de{' '}
               {CONFIG_SIMULADOR.potenciaW} W. Envie um carro ou um pedestre — ou clique na rua — e
-              veja cada poste reagir ao entrar no raio do sensor, esperar alguns segundos e voltar
-              ao modo econômico.
+              veja cada poste reagir ao entrar no raio do sensor de presença (PIR e/ou HC-SR04, na
+              maquete), esperar alguns segundos e voltar ao modo econômico.
             </p>
           }
         />

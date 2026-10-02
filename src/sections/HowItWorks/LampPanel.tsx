@@ -79,7 +79,7 @@ export function LampPanel({ etapa, className }: LampPanelProps) {
 
       {/* Medidor de potência */}
       <div className="absolute top-5 left-5 rounded-xl bg-azul-noite/80 px-3 py-2 text-white backdrop-blur-sm">
-        <p className="text-xs text-nevoa">Potência da luminária</p>
+        <p className="text-xs text-nevoa">Intensidade (PWM)</p>
         <p className="font-display text-2xl font-bold tabular-nums">{percentual}%</p>
         <div
           className="mt-1 h-1.5 w-28 overflow-hidden rounded-full bg-white/10"

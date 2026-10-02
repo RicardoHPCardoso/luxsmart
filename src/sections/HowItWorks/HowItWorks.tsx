@@ -7,13 +7,16 @@ import {
 } from 'framer-motion';
 import { useLenis } from 'lenis/react';
 import { useRef, useState } from 'react';
+import { Icone } from '@/components/icons/icons';
 import { Section } from '@/components/layout/Section';
 import { Reveal } from '@/components/ui/Reveal';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { ETAPAS, type Etapa } from '@/data/etapas';
+import { PROTOTIPO } from '@/data/hardware';
 import { SECOES } from '@/data/navegacao';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/cn';
+import { DecisionChain } from './DecisionChain';
 import { FlowDiagram } from './FlowDiagram';
 import { LampPanel } from './LampPanel';
 
@@ -37,15 +40,34 @@ export function HowItWorks() {
           titulo="Três estados, uma decisão a cada instante"
           descricao={
             <p>
-              Dois sensores informam o microcontrolador se é dia ou noite e se há alguém por perto.
-              Ele ajusta a luminária pelo driver dimerizável.{' '}
+              O LDR indica se é dia ou noite e o sensor de presença (PIR e/ou HC-SR04) percebe quem
+              se aproxima. O ESP32 decide o modo e ajusta o brilho dos LEDs por PWM.{' '}
               {modoFixo && 'Role a página para ver o poste mudar de estado.'}
             </p>
           }
         />
+        <AvisoMaquete />
       </div>
       {modoFixo ? <EtapasComRolagem /> : <EtapasEstaticas />}
     </Section>
+  );
+}
+
+/** Deixa claro que a demonstração física é uma maquete em escala. */
+function AvisoMaquete() {
+  return (
+    <Reveal className="mt-8 flex max-w-3xl items-start gap-4 rounded-2xl border border-azul-brilho/30 bg-white/[0.04] p-5">
+      <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-amarelo-luz text-azul-noite">
+        <Icone nome="maquete" />
+      </span>
+      <div>
+        <p className="font-semibold text-white">{PROTOTIPO.titulo}</p>
+        <p className="mt-1 text-sm text-nevoa">{PROTOTIPO.descricao}</p>
+        <p className="mt-2 text-sm text-azul-brilho">
+          Passe o mouse ou toque em cada componente do diagrama para ver a função.
+        </p>
+      </div>
+    </Reveal>
   );
 }
 
@@ -125,7 +147,7 @@ function SeletorEtapas({ indiceAtivo, aoSelecionar }: SeletorEtapasProps) {
 
 function DescricaoEtapa({ etapa }: { etapa: Etapa }) {
   return (
-    <div aria-live="polite" className="min-h-[5.5rem] sm:min-h-24">
+    <div aria-live="polite" className="min-h-[7.5rem] sm:min-h-32">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={etapa.id}
@@ -138,6 +160,9 @@ function DescricaoEtapa({ etapa }: { etapa: Etapa }) {
             {etapa.titulo} <span className="text-amarelo-luz">· {etapa.resumo}</span>
           </h3>
           <p className="mt-1 text-sm text-nevoa sm:text-base">{etapa.descricao}</p>
+          <div className="mt-2">
+            <DecisionChain etapa={etapa} />
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>
@@ -161,6 +186,7 @@ function EtapasEstaticas() {
                 {i + 1}. {etapa.titulo} <span className="text-amarelo-luz">· {etapa.resumo}</span>
               </h3>
               <p className="text-nevoa">{etapa.descricao}</p>
+              <DecisionChain etapa={etapa} />
               <FlowDiagram etapa={etapa} />
             </div>
           </Reveal>

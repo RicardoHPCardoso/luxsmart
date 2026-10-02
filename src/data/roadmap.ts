@@ -30,14 +30,20 @@ export const ROADMAP: readonly EtapaRoadmap[] = [
   {
     titulo: 'Protótipo',
     periodo: '2026 · 2º semestre',
-    descricao: 'Montagem do poste em escala com sensores, microcontrolador e LED dimerizável.',
-    entregas: ['Circuito montado', 'Firmware com os 3 estados', 'Site de apresentação'],
+    descricao:
+      'Montagem da maquete em escala: LDR e sensor de presença (PIR e/ou HC-SR04) ligados ao ESP32, que controla por PWM os LEDs que representam os postes.',
+    entregas: [
+      'Circuito montado',
+      'Maquete em escala',
+      'Firmware com os 3 modos',
+      'Site de apresentação',
+    ],
     status: 'em-andamento',
   },
   {
     titulo: 'Testes',
     periodo: '2027 · 1º semestre',
-    descricao: 'Medição de consumo real, tempo de resposta e alcance dos sensores.',
+    descricao: 'Medição de consumo, tempo de resposta e alcance dos sensores na maquete.',
     entregas: ['Relatório de consumo medido', 'Ajuste de dimerização e tempo de espera'],
     status: 'planejado',
   },

@@ -49,6 +49,7 @@ const PREMISSAS = [
   'O gráfico da noite típica distribui o movimento hora a hora (mais cedo e ao amanhecer, menos de madrugada), mantendo a mesma média — o consumo anual não muda.',
   'A calculadora usa um “poste médio” (potência média e movimento ponderado pela energia de cada via), o que reproduz o total da cidade.',
   'O tempo em que a luz fica a 100% após o fim do movimento está incluído no percentual de movimento.',
+  'A demonstração física do LuxSmart é uma maquete em escala, em que LEDs representam os postes e o ESP32 controla o brilho por PWM. Os valores para Indaiatuba são projeções com luminárias reais, não medições da maquete.',
 ] as const;
 
 const grupos = listarDadosReferencia(INDAIATUBA);

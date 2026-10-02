@@ -1,28 +1,37 @@
 /**
  * Os três estados do poste, na ordem em que aparecem na seção "Como funciona".
+ * Cada estado indica a cadeia de componentes responsável pela decisão.
  */
 import type { IdComponente } from './hardware';
 import { INDAIATUBA } from './indaiatuba';
 
 export type IdEtapa = 'dia' | 'noite' | 'movimento';
 
+/** Um passo da cadeia de decisão: qual componente age e o que ele faz. */
+export interface PassoCadeia {
+  componente: IdComponente;
+  acao: string;
+}
+
 export interface Etapa {
   id: IdEtapa;
   titulo: string;
   resumo: string;
   descricao: string;
-  /** Potência da luminária nesta etapa (0–1). */
+  /** Intensidade dos LEDs nesta etapa (0–1), definida pelo PWM. */
   intensidade: number;
   /** Componentes que estão enviando/recebendo sinal nesta etapa. */
   ativos: readonly IdComponente[];
-  /** Leituras exibidas ao lado do diagrama. */
+  /** Componente(s) responsável(is) → ação, exibidos como uma cadeia. */
+  cadeia: readonly PassoCadeia[];
+  /** Leituras exibidas nos sensores do diagrama. */
   leituras: {
-    luminosidade: string;
+    ldr: string;
     presenca: string;
   };
 }
 
-const dimerizacao = INDAIATUBA.dimerizacao.valor;
+const NIVEL_BAIXO = Math.round(INDAIATUBA.dimerizacao.valor * 100);
 
 export const ETAPAS: readonly Etapa[] = [
   {
@@ -30,29 +39,40 @@ export const ETAPAS: readonly Etapa[] = [
     titulo: 'Dia',
     resumo: 'Desligado',
     descricao:
-      'O sensor de luminosidade percebe a luz do sol e o microcontrolador mantém a luminária desligada. Nenhuma energia é gasta à toa.',
+      'O LDR detecta a luz do dia e o ESP32 mantém os LEDs desligados. Nenhuma energia é gasta à toa.',
     intensidade: 0,
-    ativos: ['luminosidade', 'microcontrolador'],
-    leituras: { luminosidade: 'claro', presenca: 'ignorada' },
+    ativos: ['ldr', 'esp32'],
+    cadeia: [
+      { componente: 'ldr', acao: 'detecta luz' },
+      { componente: 'esp32', acao: 'desliga os LEDs' },
+    ],
+    leituras: { ldr: 'claro', presenca: 'ignorada' },
   },
   {
     id: 'noite',
     titulo: 'Noite sem movimento',
-    resumo: `Econômico (${Math.round(dimerizacao * 100)}%)`,
-    descricao:
-      'Escureceu e não há ninguém por perto: a luz fica dimerizada, iluminando o suficiente para orientação e consumindo bem menos.',
-    intensidade: dimerizacao,
-    ativos: ['luminosidade', 'microcontrolador', 'driver', 'luminaria'],
-    leituras: { luminosidade: 'escuro', presenca: 'ninguém' },
+    resumo: `Econômico (${NIVEL_BAIXO}%)`,
+    descricao: `Escureceu e ninguém está por perto: o ESP32 mantém o PWM em nível baixo (${NIVEL_BAIXO}%), iluminando o suficiente para orientação e consumindo bem menos.`,
+    intensidade: INDAIATUBA.dimerizacao.valor,
+    ativos: ['ldr', 'esp32', 'pwm', 'leds'],
+    cadeia: [
+      { componente: 'ldr', acao: 'detecta pouca luz' },
+      { componente: 'pwm', acao: `em nível baixo (${NIVEL_BAIXO}%)` },
+    ],
+    leituras: { ldr: 'escuro', presenca: 'ninguém' },
   },
   {
     id: 'movimento',
     titulo: 'Movimento detectado',
     resumo: 'Luz total (100%)',
     descricao:
-      'Um carro ou pedestre entra no raio do sensor e a luz vai a 100% na hora. Alguns segundos depois que o movimento acaba, volta ao modo econômico.',
+      'O PIR/HC-SR04 detecta um carro ou pedestre e o ESP32 leva o PWM a 100% na hora. Alguns segundos depois que o movimento acaba, volta ao modo econômico.',
     intensidade: 1,
-    ativos: ['luminosidade', 'presenca', 'microcontrolador', 'driver', 'luminaria'],
-    leituras: { luminosidade: 'escuro', presenca: 'detectada' },
+    ativos: ['ldr', 'presenca', 'esp32', 'pwm', 'leds'],
+    cadeia: [
+      { componente: 'presenca', acao: 'detecta movimento' },
+      { componente: 'pwm', acao: 'em 100%' },
+    ],
+    leituras: { ldr: 'escuro', presenca: 'detectada' },
   },
 ];

@@ -1,5 +1,5 @@
 /**
- * Informações gerais do site. Edite aqui nome da instituição, links etc.
+ * Informações gerais do site. Edite aqui instituição, curso, links etc.
  */
 export const SITE = {
   nome: 'LuxSmart',
@@ -7,8 +7,8 @@ export const SITE = {
   descricao:
     'Um poste inteligente que desliga de dia, economiza à noite e acende por completo quando alguém passa.',
   cidade: 'Indaiatuba – SP',
-  /** Substitua pelo nome da instituição de ensino. */
-  instituicao: 'Curso de Ciência da Computação',
+  curso: 'Ciência da Computação',
+  instituicao: 'UNIMAX',
   ano: 2026,
   /** URL do repositório do projeto (deixe vazio para ocultar o link). */
   repositorio: '',

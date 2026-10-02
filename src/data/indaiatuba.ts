@@ -136,7 +136,7 @@ export const INDAIATUBA: DadosCidade = {
     status: 'placeholder',
     fonte: 'Valor provisório do projeto',
     observacao:
-      'Sensores + microcontrolador + interface de dimerização + instalação. Substituir pelo orçamento real do protótipo.',
+      'Sensores (LDR e presença) + ESP32 + interface de dimerização da luminária + instalação, por poste. Substituir pelo orçamento real.',
   },
 
   vias: {

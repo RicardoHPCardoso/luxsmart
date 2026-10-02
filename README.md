@@ -2,7 +2,7 @@
 
 ![LuxSmart: a rua que acende quando você passa](public/og-image.png)
 
-Site de apresentação do **LuxSmart**, projeto acadêmico de Ciência da Computação: um poste de
+Site de apresentação do **LuxSmart**, projeto acadêmico de Ciência da Computação (UNIMAX): um poste de
 iluminação pública que
 
 - **de dia** fica **desligado** (sensor de luminosidade);
@@ -13,20 +13,36 @@ iluminação pública que
 O objetivo é reduzir o custo de energia da iluminação pública sem perder segurança, usando
 **Indaiatuba – SP** como cidade de referência.
 
+## Protótipo (maquete)
+
+A demonstração física é uma **maquete em escala**, em que **LEDs representam os postes**.
+
+| Componente                                         | Função                                                                    |
+| -------------------------------------------------- | ------------------------------------------------------------------------- |
+| Sensor de luminosidade LDR                         | Identificar a condição de dia ou noite                                    |
+| Sensor de presença PIR e/ou HC-SR04 (ultrassônico) | Detectar pedestres ou veículos no trecho monitorado                       |
+| ESP32                                              | Ler os sensores, aplicar a lógica dos modos e comandar a iluminação       |
+| LEDs                                               | Representar os postes da maquete                                          |
+| PWM                                                | Controlar a intensidade luminosa e permitir a transição entre os modos    |
+| Wi-Fi _(previsto)_                                 | Recurso previsto para comunicação futura, caso seja incorporado ao escopo |
+
+Fluxo: LDR + (PIR / HC-SR04) → ESP32 → PWM → LEDs. O Wi-Fi é uma evolução futura, fora do
+fluxo atual.
+
 ## Seções do site
 
-| #   | Seção                  | O que mostra                                                                                              |
-| --- | ---------------------- | --------------------------------------------------------------------------------------------------------- |
-| 1   | Hero 3D                | Rua noturna low-poly; um carro passa e os postes acendem em sequência. Interruptor Dia/Noite.             |
-| 2   | O problema             | Números animados sobre a rede de Indaiatuba e a ilustração "energia paga para iluminar ninguém".          |
-| 3   | Como funciona          | Seção fixa guiada pelo scroll: Dia → Noite sem movimento → Movimento, com diagrama de sinais do hardware. |
-| 4   | Simulador              | Rua 2D com 8 postes: envie carros e pedestres ou clique na rua; medidor de consumo instantâneo.           |
-| 5   | Dashboard · Indaiatuba | KPIs e gráficos (3 cenários, consumo acumulado, potência numa noite típica) com filtro por tipo de via.   |
-| 6   | Calculadora            | Sliders de postes, potência, movimento, dimerização, tarifa e custo do kit; botão "Aplicar à cidade".     |
-| 7   | Benefícios             | Economia, segurança, poluição luminosa, vida útil, dados para a prefeitura, ODS 7 e 11.                   |
-| 8   | Roadmap                | Pesquisa → protótipo → testes → piloto em uma rua → expansão.                                             |
-| 9   | Equipe                 | Cards dos integrantes.                                                                                    |
-| 10  | Metodologia e fontes   | Fórmulas, premissas e a tabela com todos os dados de referência, fontes e situação de cada um.            |
+| #   | Seção                  | O que mostra                                                                                                                                |
+| --- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Hero 3D                | Rua noturna low-poly; um carro passa e os postes acendem em sequência. Interruptor Dia/Noite.                                               |
+| 2   | O problema             | Números animados sobre a rede de Indaiatuba e a ilustração "energia paga para iluminar ninguém".                                            |
+| 3   | Como funciona          | Seção fixa guiada pelo scroll: Dia → Noite sem movimento → Movimento, com o diagrama do protótipo (LDR + PIR/HC-SR04 → ESP32 → PWM → LEDs). |
+| 4   | Simulador              | Rua 2D com 8 postes: envie carros e pedestres ou clique na rua; medidor de consumo instantâneo.                                             |
+| 5   | Dashboard · Indaiatuba | KPIs e gráficos (3 cenários, consumo acumulado, potência numa noite típica) com filtro por tipo de via.                                     |
+| 6   | Calculadora            | Sliders de postes, potência, movimento, dimerização, tarifa e custo do kit; botão "Aplicar à cidade".                                       |
+| 7   | Benefícios             | Economia, segurança, poluição luminosa, vida útil, dados para a prefeitura, ODS 7 e 11.                                                     |
+| 8   | Roadmap                | Pesquisa → protótipo → testes → piloto em uma rua → expansão.                                                                               |
+| 9   | Equipe                 | Integrantes agrupados por área de atuação, com avatares de iniciais.                                                                        |
+| 10  | Metodologia e fontes   | Fórmulas, premissas e a tabela com todos os dados de referência, fontes e situação de cada um.                                              |
 
 > **Números honestos:** todo valor que não é um fato publicado aparece no site com o selo
 > **≈ estimativa** (ou **≈ a verificar**) e é explicado na seção "Metodologia e fontes".
@@ -67,14 +83,14 @@ atualizam sozinhos.
 | Arquivo                   | O que muda                                                                                                                                                                     |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `src/data/indaiatuba.ts`  | **Dados de referência**: pontos de LED, horas por noite, tarifa, fator de CO₂, dimerização, custo do kit, potências e movimento por tipo de via, perfil de movimento da noite. |
-| `src/data/hardware.ts`    | Nomes e modelos dos componentes (sensores, microcontrolador, driver, luminária) do diagrama.                                                                                   |
-| `src/data/etapas.ts`      | Textos dos 3 estados do poste.                                                                                                                                                 |
-| `src/data/equipe.ts`      | Integrantes (nome, função, foto opcional em `public/equipe/`, link).                                                                                                           |
+| `src/data/hardware.ts`    | Componentes do protótipo (LDR, PIR/HC-SR04, ESP32, LEDs, PWM e Wi-Fi previsto), função, status e a nota sobre a maquete.                                                       |
+| `src/data/etapas.ts`      | Textos dos 3 estados e a cadeia de componentes responsável por cada um.                                                                                                        |
+| `src/data/equipe.ts`      | Áreas da equipe e integrantes (nome; `foto`, `github` e `linkedin` opcionais).                                                                                                 |
 | `src/data/roadmap.ts`     | Etapas do roadmap, período e status.                                                                                                                                           |
 | `src/data/beneficios.ts`  | Cards de benefícios.                                                                                                                                                           |
 | `src/data/calculadora.ts` | Limites dos sliders e exemplo inicial da calculadora.                                                                                                                          |
 | `src/data/simulador.ts`   | Raio do sensor, tempo de espera, velocidades e rampas do simulador.                                                                                                            |
-| `src/data/site.ts`        | Nome da instituição, ano, link do repositório.                                                                                                                                 |
+| `src/data/site.ts`        | Curso, instituição, ano e link do repositório.                                                                                                                                 |
 
 Cada dado de referência tem `valor`, `unidade`, `fonte`, `observacao` e `status`:
 
@@ -136,8 +152,9 @@ o vapor de sódio aparece só como referência histórica.
 
 ## Qualidade
 
-- **Testes:** 80 testes (Vitest) — lógica de energia com casos-limite (0% e 100% de movimento,
-  dimerização 0 e 1), perfil noturno, simulação, formatação e testes de componente da calculadora.
+- **Testes:** 98 testes (Vitest) — lógica de energia com casos-limite (0% e 100% de movimento,
+  dimerização 0 e 1), perfil noturno, simulação, formatação, dados da equipe e do hardware e testes
+  de componente (calculadora, equipe e diagrama do protótipo).
 - **Acessibilidade:** HTML semântico, navegação por teclado com foco visível, link "pular para o
   conteúdo", `aria-label`/`aria-valuetext` nos controles, tabela de dados para cada gráfico, anúncios
   para leitores de tela com debounce, contraste AA (amarelo só como fundo/destaque sobre claro).
@@ -187,4 +204,4 @@ Podem ser definidas no shell, no painel da Vercel ou em um arquivo `.env` (veja 
 
 ---
 
-Projeto acadêmico · Ciência da Computação · Indaiatuba – SP · 2026
+Projeto acadêmico · Ciência da Computação · UNIMAX · Indaiatuba – SP · 2026

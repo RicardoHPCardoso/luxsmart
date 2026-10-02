@@ -31,13 +31,13 @@ export const BENEFICIOS: readonly Beneficio[] = [
   {
     titulo: 'LED dura mais',
     descricao:
-      'Operar dimerizado reduz a temperatura de trabalho do LED e do driver, o que tende a prolongar a vida útil do equipamento.',
+      'Operar dimerizado reduz a temperatura de trabalho do LED e da sua eletrônica, o que tende a prolongar a vida útil do equipamento.',
     icone: 'ciclo',
   },
   {
     titulo: 'Dados para a prefeitura',
     descricao:
-      'Cada poste pode registrar horários de movimento e consumo, apoiando o planejamento da iluminação e da manutenção.',
+      'Com a comunicação Wi-Fi prevista como evolução futura, cada poste poderá enviar horários de movimento e consumo, apoiando o planejamento da iluminação e da manutenção.',
     icone: 'grafico',
   },
   {
