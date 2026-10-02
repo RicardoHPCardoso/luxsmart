@@ -146,7 +146,7 @@ o vapor de sódio aparece só como referência histórica.
 │   ├── test/             configuração dos testes de componente
 │   ├── App.tsx           ordem das seções
 │   └── index.css         design system (cores, fontes, brilho) com Tailwind 4
-├── .github/workflows/    deploy automático no GitHub Pages
+├── .github/workflows/    CI: formatação, lint, testes e build a cada push
 └── vercel.json           configuração da Vercel
 ```
 
@@ -169,18 +169,22 @@ o vapor de sódio aparece só como referência histórica.
 
 ## Deploy
 
-### Vercel (recomendado)
+O site é publicado pela **Vercel**:
 
-1. Importe o repositório em [vercel.com/new](https://vercel.com/new) — o preset **Vite** é detectado.
-2. Em _Settings → Environment Variables_, defina `SITE_URL` com a URL final
-   (ex.: `https://luxsmart.vercel.app`) para as imagens de compartilhamento usarem URL absoluta.
+1. Importe o repositório em [vercel.com/new](https://vercel.com/new) — o preset **Vite** é detectado
+   e o `vercel.json` já define build e pasta de saída.
+2. Depois do primeiro deploy, em _Settings → Environment Variables_, defina `SITE_URL` com a URL
+   final (ex.: `https://luxsmart.vercel.app`) e faça _Redeploy_, para as imagens de
+   compartilhamento usarem URL absoluta.
 3. Cada push na `main` publica automaticamente.
 
-### GitHub Pages
+### Integração contínua
 
-1. Em _Settings → Pages_, escolha **Source: GitHub Actions**.
-2. Faça push na `main`: o workflow `.github/workflows/deploy-pages.yml` roda lint, testes e build
-   (com `BASE_PATH=/<repositório>/`) e publica em `https://<usuário>.github.io/<repositório>/`.
+O workflow `.github/workflows/ci.yml` roda a cada push e pull request: `npm run format:check`,
+`npm run lint`, `npm test` e `npm run build`. Ele não publica nada — só mostra ✓ ou ✗ no GitHub.
+
+Para publicar em outro lugar com subdiretório (ex.: GitHub Pages em
+`https://<usuário>.github.io/luxsmart/`), basta gerar o build com `BASE_PATH=/luxsmart/`.
 
 ### Variáveis de build (opcionais)
 
