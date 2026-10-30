@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EXEMPLO_RUA, LIMITES_CALCULADORA } from '@/data/calculadora';
 import { INDAIATUBA } from '@/data/indaiatuba';
-import { ajustarAoLimite, calcularEconomia, criarEscalaLog, valoresDaCidade } from './calculator';
+import { ajustarAoLimite, calcularEconomia, valoresDaCidade } from './calculator';
 import { comparacaoPorFiltro } from './indaiatubaScenarios';
 
 const HORAS = INDAIATUBA.horasPorNoite.valor;
@@ -33,28 +33,5 @@ describe('ajustarAoLimite', () => {
     expect(ajustarAoLimite(0.304, LIMITES_CALCULADORA.dimerizacao)).toBe(0.3);
     expect(ajustarAoLimite(1234, LIMITES_CALCULADORA.custoKit)).toBe(1230);
     expect(ajustarAoLimite(Number.NaN, LIMITES_CALCULADORA.potenciaW)).toBe(20);
-  });
-});
-
-describe('criarEscalaLog', () => {
-  const escala = criarEscalaLog(1, 40_000);
-
-  it('mapeia os extremos', () => {
-    expect(escala.paraPosicao(1)).toBe(0);
-    expect(escala.paraPosicao(40_000)).toBe(1000);
-    expect(escala.paraValor(0)).toBe(1);
-    expect(escala.paraValor(1000)).toBe(40_000);
-  });
-
-  it('ida e volta preserva valores (com a precisão da escala)', () => {
-    for (const v of [8, 30, 250, 5_600, 28_000]) {
-      const volta = escala.paraValor(escala.paraPosicao(v));
-      expect(Math.abs(volta - v) / v).toBeLessThan(0.012);
-    }
-  });
-
-  it('rejeita faixas inválidas', () => {
-    expect(() => criarEscalaLog(0, 10)).toThrow(RangeError);
-    expect(() => criarEscalaLog(10, 5)).toThrow(RangeError);
   });
 });

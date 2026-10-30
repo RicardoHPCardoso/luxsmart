@@ -45,31 +45,9 @@
   /* Brilho (glow) da luz */
   --shadow-glow-sm: 0 0 12px rgb(255 200 61 / 0.45);
   --shadow-glow: 0 0 24px rgb(255 200 61 / 0.45), 0 0 64px rgb(255 200 61 / 0.2);
-  --shadow-glow-lg: 0 0 40px rgb(255 200 61 / 0.55), 0 0 120px rgb(255 200 61 / 0.25);
   --shadow-cartao: 0 1px 2px rgb(10 26 51 / 0.06), 0 8px 24px rgb(10 26 51 / 0.08);
 
   --ease-luz: cubic-bezier(0.22, 1, 0.36, 1);
-
-  --animate-fluxo: fluxo 1.2s linear infinite;
-  --animate-pulso-luz: pulso-luz 2.4s ease-in-out infinite;
-
-  @keyframes fluxo {
-    to {
-      stroke-dashoffset: -24;
-    }
-  }
-
-  @keyframes pulso-luz {
-    0%,
-    100% {
-      opacity: 0.55;
-      scale: 1;
-    }
-    50% {
-      opacity: 1;
-      scale: 1.06;
-    }
-  }
 }
 
 @layer base {
