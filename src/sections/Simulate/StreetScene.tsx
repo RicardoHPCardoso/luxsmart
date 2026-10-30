@@ -2,7 +2,7 @@ import { useId, type MouseEvent } from 'react';
 import { CONFIG_SIMULADOR } from '@/data/simulador';
 import type { Agente, EstadoPoste, EstadoSimulacao } from '@/lib/simulation';
 
-/** Geometria do desenho (viewBox 1000 × 320). */
+/** Geometria do desenho (viewBox comprimentoRua × 320). */
 const ALTURA = 320;
 const Y_CALCADA = 206;
 const Y_RUA = 220;
@@ -39,7 +39,7 @@ export function StreetScene({ estado, aoClicar }: StreetSceneProps) {
       className="block h-auto w-full cursor-crosshair touch-manipulation select-none"
       onClick={clicar}
       role="img"
-      aria-label={`Rua simulada com ${estado.postes.length} postes LuxSmart. Use os botões acima para enviar carros e pedestres.`}
+      aria-label={`Rua simulada com ${estado.postes.length} postes LuxSmart. Toque na rua ou use os botões para criar movimento.`}
     >
       <defs>
         <linearGradient id={`ceu-${id}`} x1="0" y1="0" x2="0" y2="1">

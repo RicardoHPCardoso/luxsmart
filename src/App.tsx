@@ -3,14 +3,13 @@ import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { SkipLink } from '@/components/layout/SkipLink';
 import { SmoothScroll } from '@/components/layout/SmoothScroll';
-import { Calculator } from '@/sections/Calculator/Calculator';
 import { Hero } from '@/sections/Hero/Hero';
 import { HowItWorks } from '@/sections/HowItWorks/HowItWorks';
 import { Methodology } from '@/sections/Methodology';
 import { ProblemSolution } from '@/sections/ProblemSolution';
 import { Results } from '@/sections/Results/Results';
 import { Roadmap } from '@/sections/Roadmap';
-import { Simulator } from '@/sections/Simulator/Simulator';
+import { Simulate } from '@/sections/Simulate/Simulate';
 import { Team } from '@/sections/Team';
 
 export default function App() {
@@ -23,9 +22,9 @@ export default function App() {
           <Hero />
           <ProblemSolution />
           <HowItWorks />
-          <Simulator />
+
           <Results />
-          <Calculator />
+          <Simulate />
           <Roadmap />
           <Team />
           <Methodology />

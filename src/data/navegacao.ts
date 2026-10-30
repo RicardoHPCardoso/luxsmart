@@ -9,7 +9,6 @@ export const SECOES = {
   simule: 'simule',
   equipe: 'equipe',
   // Seções antigas, removidas ao longo da simplificação.
-  calculadora: 'calculadora',
   roadmap: 'roadmap',
   metodologia: 'metodologia',
 } as const;

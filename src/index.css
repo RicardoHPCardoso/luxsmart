@@ -139,7 +139,8 @@
   .slider {
     appearance: none;
     width: 100%;
-    min-block-size: 1.5rem;
+    /* Área de toque de 44 px, mesmo com o trilho fino */
+    min-block-size: 2.75rem;
     background: transparent;
     cursor: pointer;
     --progresso: 50%;
