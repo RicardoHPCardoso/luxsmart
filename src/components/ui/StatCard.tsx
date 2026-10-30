@@ -7,7 +7,8 @@ interface StatCardProps {
   /** Número em destaque (normalmente um <AnimatedNumber>). */
   valor: ReactNode;
   rotulo: ReactNode;
-  status: StatusDado;
+  /** Procedência do número; sem ela, o card não mostra selo. */
+  status?: StatusDado;
   tema?: 'noite' | 'dia';
   className?: string;
 }
@@ -33,7 +34,7 @@ export function StatCard({ valor, rotulo, status, tema = 'dia', className }: Sta
         >
           {valor}
         </p>
-        <EstimateBadge status={status} tema={tema} />
+        {status && <EstimateBadge status={status} tema={tema} />}
       </div>
       <p className={cn('mt-2 text-base', noite ? 'text-nevoa' : 'text-tinta-suave')}>{rotulo}</p>
     </div>

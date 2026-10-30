@@ -4,11 +4,11 @@ import { Header } from '@/components/layout/Header';
 import { SkipLink } from '@/components/layout/SkipLink';
 import { SmoothScroll } from '@/components/layout/SmoothScroll';
 import { Calculator } from '@/sections/Calculator/Calculator';
-import { Dashboard } from '@/sections/Dashboard/Dashboard';
 import { Hero } from '@/sections/Hero/Hero';
 import { HowItWorks } from '@/sections/HowItWorks/HowItWorks';
 import { Methodology } from '@/sections/Methodology';
 import { ProblemSolution } from '@/sections/ProblemSolution';
+import { Results } from '@/sections/Results/Results';
 import { Roadmap } from '@/sections/Roadmap';
 import { Simulator } from '@/sections/Simulator/Simulator';
 import { Team } from '@/sections/Team';
@@ -24,7 +24,7 @@ export default function App() {
           <ProblemSolution />
           <HowItWorks />
           <Simulator />
-          <Dashboard />
+          <Results />
           <Calculator />
           <Roadmap />
           <Team />
