@@ -1,6 +1,5 @@
 import { MotionConfig } from 'framer-motion';
 import { Footer } from '@/components/layout/Footer';
-import { ModoCeuProvider } from '@/components/ModoCeuProvider';
 import { Header } from '@/components/layout/Header';
 import { SkipLink } from '@/components/layout/SkipLink';
 import { SmoothScroll } from '@/components/layout/SmoothScroll';
@@ -19,23 +18,21 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <SmoothScroll>
-        <ModoCeuProvider>
-          <SkipLink />
-          <Header />
-          <main id="conteudo" tabIndex={-1}>
-            <Hero />
-            <Problem />
-            <HowItWorks />
-            <Simulator />
-            <Dashboard />
-            <Calculator />
-            <Benefits />
-            <Roadmap />
-            <Team />
-            <Methodology />
-          </main>
-          <Footer />
-        </ModoCeuProvider>
+        <SkipLink />
+        <Header />
+        <main id="conteudo" tabIndex={-1}>
+          <Hero />
+          <Problem />
+          <HowItWorks />
+          <Simulator />
+          <Dashboard />
+          <Calculator />
+          <Benefits />
+          <Roadmap />
+          <Team />
+          <Methodology />
+        </main>
+        <Footer />
       </SmoothScroll>
     </MotionConfig>
   );

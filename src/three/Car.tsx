@@ -1,10 +1,9 @@
 import type { Ref } from 'react';
-import { AdditiveBlending, type CanvasTexture, type Group, type MeshBasicMaterial } from 'three';
+import { AdditiveBlending, type CanvasTexture, type Group } from 'three';
 import { CARRO, CORES } from './sceneConfig';
 
 interface CarProps {
   grupo: Ref<Group>;
-  farol: Ref<MeshBasicMaterial>;
   texturaBrilho: CanvasTexture;
 }
 
@@ -16,7 +15,7 @@ const RODAS: Array<[number, number]> = [
 ];
 
 /** Carro low-poly com faróis; a cena move o grupo ao longo do eixo X. */
-export function Car({ grupo, farol, texturaBrilho }: CarProps) {
+export function Car({ grupo, texturaBrilho }: CarProps) {
   return (
     <group ref={grupo} position={[CARRO.inicioX, 0, CARRO.z]}>
       <mesh position-y={0.45}>
@@ -48,7 +47,6 @@ export function Car({ grupo, farol, texturaBrilho }: CarProps) {
       <mesh rotation-x={-Math.PI / 2} position={[3.8, 0.04, 0]} scale={[6, 2.2, 1]}>
         <planeGeometry args={[1, 1]} />
         <meshBasicMaterial
-          ref={farol}
           color={CORES.luzClara}
           map={texturaBrilho}
           transparent

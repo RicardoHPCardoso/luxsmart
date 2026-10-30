@@ -34,6 +34,14 @@
   --font-display: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
+  /* Tamanhos fluidos: crescem com a tela, dentro de um mínimo e um máximo */
+  --text-hero: clamp(3.25rem, 2rem + 6vw, 6rem);
+  --text-hero--line-height: 1;
+  --text-titulo: clamp(1.875rem, 1.4rem + 2vw, 3rem);
+  --text-titulo--line-height: 1.1;
+  --text-destaque: clamp(2.25rem, 1.8rem + 2vw, 3.25rem);
+  --text-destaque--line-height: 1.05;
+
   /* Brilho (glow) da luz */
   --shadow-glow-sm: 0 0 12px rgb(255 200 61 / 0.45);
   --shadow-glow: 0 0 24px rgb(255 200 61 / 0.45), 0 0 64px rgb(255 200 61 / 0.2);
@@ -200,6 +208,59 @@
     .slider::-webkit-slider-thumb {
       background: Highlight;
     }
+  }
+}
+
+/*
+ * Rua animada do início (HeroStreet): carro e postes sincronizados só com CSS.
+ * Cada poste usa o mesmo ciclo, deslocado pelo instante em que o carro chega.
+ */
+@layer components {
+  .rua-carro {
+    animation: rua-carro var(--rua-duracao) linear infinite;
+  }
+
+  .rua-luz {
+    opacity: var(--rua-luz-baixa);
+    animation: rua-luz var(--rua-duracao) linear infinite both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rua-carro {
+      animation: none;
+      transform: translateX(var(--rua-carro-parado));
+    }
+
+    .rua-luz {
+      animation: none;
+    }
+
+    .rua-luz.perto {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes rua-carro {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--rua-percurso));
+  }
+}
+
+@keyframes rua-luz {
+  0% {
+    opacity: var(--rua-luz-baixa);
+  }
+  4%,
+  31% {
+    opacity: 1;
+  }
+  41%,
+  100% {
+    opacity: var(--rua-luz-baixa);
   }
 }
 

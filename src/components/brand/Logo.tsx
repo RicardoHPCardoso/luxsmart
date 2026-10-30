@@ -1,33 +1,17 @@
-import { motion, type MotionValue } from 'framer-motion';
 import { useId } from 'react';
 import { cn } from '@/lib/cn';
-
-interface LogoMarkProps {
-  className?: string;
-  /**
-   * Intensidade do brilho (0–1). Aceita MotionValue para acompanhar o scroll
-   * sem re-renderizar o componente.
-   */
-  brilho?: number | MotionValue<number>;
-}
 
 /**
  * Símbolo LuxSmart: um poste estilizado cuja luz se espalha em ondas,
  * lembrando um ícone de sinal — luz + sensor.
  */
-export function LogoMark({ className, brilho = 1 }: LogoMarkProps) {
+export function LogoMark({ className }: { className?: string }) {
   const idHalo = `logo-halo-${useId()}`;
 
   return (
     <svg viewBox="0 0 48 48" className={cn('shrink-0', className)} aria-hidden="true">
       {/* Halo da luminária */}
-      <motion.circle
-        cx="33.5"
-        cy="10"
-        r="11"
-        fill={`url(#${idHalo})`}
-        style={{ opacity: brilho }}
-      />
+      <circle cx="33.5" cy="10" r="11" fill={`url(#${idHalo})`} />
       {/* Poste e braço */}
       <path
         d="M12 44V15a9 9 0 0 1 9-9h6"
@@ -55,25 +39,18 @@ export function LogoMark({ className, brilho = 1 }: LogoMarkProps) {
   );
 }
 
-interface LogoProps extends LogoMarkProps {
-  /** `noite` para fundos escuros, `dia` para fundos claros. */
-  tema?: 'noite' | 'dia';
-}
-
-/** Símbolo + logotipo "LuxSmart". */
-export function Logo({ className, brilho, tema = 'noite' }: LogoProps) {
+/** Símbolo + logotipo "LuxSmart" (para fundos escuros). */
+export function Logo({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-2 font-display text-xl font-bold tracking-tight',
-        tema === 'noite' ? 'text-white' : 'text-azul-noite',
+        'inline-flex items-center gap-2 font-display text-xl font-bold tracking-tight text-white',
         className,
       )}
     >
-      <LogoMark className="size-9" brilho={brilho} />
+      <LogoMark className="size-9" />
       <span>
-        Lux
-        <span className={tema === 'noite' ? 'text-amarelo-luz' : 'text-azul-primario'}>Smart</span>
+        Lux<span className="text-amarelo-luz">Smart</span>
       </span>
     </span>
   );

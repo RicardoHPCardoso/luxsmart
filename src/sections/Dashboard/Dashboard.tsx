@@ -44,7 +44,7 @@ export function Dashboard() {
   }, [filtro]);
 
   return (
-    <Section id={SECOES.dashboard} tema="dia">
+    <Section id={SECOES.resultados} tema="dia">
       <div className="container-site">
         <SectionHeading
           sobretitulo="Dashboard · Indaiatuba"
