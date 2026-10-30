@@ -16,11 +16,7 @@ const TEMAS = {
 /** Wrapper de seção: aplica tema (noite/dia) e espaçamento vertical padrão. */
 export function Section({ id, tema = 'dia', className, children, ...props }: SectionProps) {
   return (
-    <section
-      id={id}
-      className={cn('relative scroll-mt-20 py-16 sm:py-20', TEMAS[tema], className)}
-      {...props}
-    >
+    <section id={id} className={cn('relative py-16 sm:py-20', TEMAS[tema], className)} {...props}>
       {children}
     </section>
   );

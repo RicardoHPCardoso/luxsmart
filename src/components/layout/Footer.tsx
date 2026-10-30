@@ -29,7 +29,7 @@ export function Footer() {
                   <a
                     href={`#${item.id}`}
                     onClick={aoClicarAncora}
-                    className="inline-flex min-h-11 items-center text-nevoa hover:text-amarelo-luz"
+                    className="inline-flex min-h-11 min-w-11 items-center text-nevoa hover:text-amarelo-luz"
                   >
                     {item.rotulo}
                   </a>
@@ -39,7 +39,7 @@ export function Footer() {
                 <li className="col-span-2">
                   <a
                     href={SITE.repositorio}
-                    className="inline-flex min-h-11 items-center text-nevoa hover:text-amarelo-luz"
+                    className="inline-flex min-h-11 min-w-11 items-center text-nevoa hover:text-amarelo-luz"
                     rel="noreferrer"
                     target="_blank"
                   >

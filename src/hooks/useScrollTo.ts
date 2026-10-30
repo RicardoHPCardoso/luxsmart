@@ -2,12 +2,11 @@ import { useReducedMotion } from 'framer-motion';
 import { useLenis } from 'lenis/react';
 import { useCallback, type MouseEvent } from 'react';
 
-/** Espaço reservado para o cabeçalho fixo ao rolar até uma seção (px). */
-export const OFFSET_CABECALHO = 80;
-
 /**
  * Rola suavemente até uma seção e move o foco para ela, preservando a
  * navegação por teclado (o foco segue o conteúdo, como num link âncora nativo).
+ * O espaço do cabeçalho fixo vem do `scroll-padding-top` do <html> (index.css),
+ * que o Lenis e o scrollIntoView nativo já respeitam.
  */
 export function useScrollTo() {
   const lenis = useLenis();
@@ -19,7 +18,7 @@ export function useScrollTo() {
       if (!alvo) return;
 
       if (lenis) {
-        lenis.scrollTo(alvo, { offset: -OFFSET_CABECALHO, immediate: Boolean(reduzirMovimento) });
+        lenis.scrollTo(alvo, { immediate: Boolean(reduzirMovimento) });
       } else {
         alvo.scrollIntoView({ behavior: reduzirMovimento ? 'auto' : 'smooth', block: 'start' });
       }

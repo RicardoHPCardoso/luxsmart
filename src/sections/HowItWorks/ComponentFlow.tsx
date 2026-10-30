@@ -18,7 +18,7 @@ const CADEIA = FLUXO_PRINCIPAL.slice(2);
  * Linha compacta do protótipo: LDR + PIR/HC-SR04 → ESP32 → PWM → LEDs.
  * Cada componente abre um cartão curto com a sua função (toque, clique,
  * mouse ou teclado). O Wi-Fi aparece só como selo "Previsto".
- * No celular a linha fica na vertical; a partir de 768 px, na horizontal.
+ * No celular e no tablet a linha fica na vertical; a partir de 1024 px, na horizontal.
  */
 export function ComponentFlow() {
   return (
@@ -30,13 +30,13 @@ export function ComponentFlow() {
 
       <ol
         role="list"
-        className="mt-5 flex flex-col items-stretch gap-2 md:flex-row md:items-center md:justify-center"
+        className="mt-5 flex flex-col items-stretch gap-2 sm:mx-auto sm:max-w-md lg:max-w-none lg:flex-row lg:items-center lg:justify-center"
       >
-        <li className="grid grid-cols-2 gap-2 md:flex md:items-center">
+        <li className="grid grid-cols-2 gap-2 lg:flex lg:items-center">
           {SENSORES.map((id, i) => (
-            <span key={id} className="contents md:flex md:items-center md:gap-2">
+            <span key={id} className="contents lg:flex lg:items-center lg:gap-2">
               {i > 0 && (
-                <span aria-hidden="true" className="hidden text-xl text-amarelo-luz md:inline">
+                <span aria-hidden="true" className="hidden text-xl text-amarelo-luz lg:inline">
                   +
                 </span>
               )}
@@ -45,14 +45,14 @@ export function ComponentFlow() {
           ))}
         </li>
         {CADEIA.map((id) => (
-          <li key={id} className="flex flex-col items-stretch gap-2 md:flex-row md:items-center">
+          <li key={id} className="flex flex-col items-stretch gap-2 lg:flex-row lg:items-center">
             <Seta />
             <Componente id={id} />
           </li>
         ))}
       </ol>
 
-      <div className="mt-5 flex flex-col gap-3 border-t border-linha-noite pt-4 md:flex-row md:items-center md:justify-between">
+      <div className="mt-5 flex flex-col gap-3 border-t border-linha-noite pt-4 lg:flex-row lg:items-center lg:justify-between">
         <p className="flex items-start gap-2 text-nevoa">
           <Icone nome="maquete" className="mt-0.5 size-5 shrink-0 text-amarelo-luz" />
           {PROTOTIPO.descricao}
@@ -78,7 +78,7 @@ function Componente({ id }: { id: IdComponente }) {
         </>
       }
       className={cn(
-        'flex min-h-11 w-full min-w-0 items-center justify-center gap-2 rounded-xl border border-amarelo-luz/50 bg-amarelo-luz/10 px-3 py-2 font-semibold text-white transition-colors hover:border-amarelo-luz hover:bg-amarelo-luz/20 md:w-auto',
+        'flex min-h-11 w-full min-w-0 items-center justify-center gap-2 rounded-xl border border-amarelo-luz/50 bg-amarelo-luz/10 px-3 py-2 font-semibold text-white transition-colors hover:border-amarelo-luz hover:bg-amarelo-luz/20 lg:w-auto',
       )}
     >
       <Icone nome={componente.icone} className="size-5 shrink-0 text-amarelo-luz" />
@@ -97,11 +97,11 @@ function Componente({ id }: { id: IdComponente }) {
   );
 }
 
-/** Seta do fluxo: para baixo no celular, para a direita a partir de 768 px. */
+/** Seta do fluxo: para baixo no celular e no tablet, para a direita a partir de 1024 px. */
 function Seta() {
   return (
     <span aria-hidden="true" className="flex justify-center text-amarelo-luz">
-      <Icone nome="seta" className="size-5 rotate-90 md:rotate-0" />
+      <Icone nome="seta" className="size-5 rotate-90 lg:rotate-0" />
     </span>
   );
 }

@@ -43,7 +43,7 @@ export function HowWeCalculate() {
           {FORMULAS.map((formula) => (
             <li
               key={formula}
-              className="rounded-lg bg-white/[0.05] px-3 py-2 font-mono text-[0.9375rem] break-words text-amarelo-suave"
+              className="rounded-lg bg-white/[0.05] px-3 py-2 font-mono text-base break-words text-amarelo-suave"
             >
               {formula}
             </li>

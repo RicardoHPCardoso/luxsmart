@@ -44,7 +44,7 @@ function CardModo({ etapa }: { etapa: Etapa }) {
 
   return (
     <article className="flex h-full flex-col rounded-2xl border border-linha-noite bg-white/[0.04] p-5">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 md:flex-col md:items-start lg:flex-row lg:items-center">
         <span
           className={cn(
             'grid size-12 shrink-0 place-items-center rounded-full',
