@@ -34,34 +34,20 @@
   --font-display: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
+  /* Tamanhos fluidos: crescem com a tela, dentro de um mínimo e um máximo */
+  --text-hero: clamp(3.25rem, 2rem + 6vw, 6rem);
+  --text-hero--line-height: 1;
+  --text-titulo: clamp(1.875rem, 1.4rem + 2vw, 3rem);
+  --text-titulo--line-height: 1.1;
+  --text-destaque: clamp(2.25rem, 1.8rem + 2vw, 3.25rem);
+  --text-destaque--line-height: 1.05;
+
   /* Brilho (glow) da luz */
   --shadow-glow-sm: 0 0 12px rgb(255 200 61 / 0.45);
   --shadow-glow: 0 0 24px rgb(255 200 61 / 0.45), 0 0 64px rgb(255 200 61 / 0.2);
-  --shadow-glow-lg: 0 0 40px rgb(255 200 61 / 0.55), 0 0 120px rgb(255 200 61 / 0.25);
   --shadow-cartao: 0 1px 2px rgb(10 26 51 / 0.06), 0 8px 24px rgb(10 26 51 / 0.08);
 
   --ease-luz: cubic-bezier(0.22, 1, 0.36, 1);
-
-  --animate-fluxo: fluxo 1.2s linear infinite;
-  --animate-pulso-luz: pulso-luz 2.4s ease-in-out infinite;
-
-  @keyframes fluxo {
-    to {
-      stroke-dashoffset: -24;
-    }
-  }
-
-  @keyframes pulso-luz {
-    0%,
-    100% {
-      opacity: 0.55;
-      scale: 1;
-    }
-    50% {
-      opacity: 1;
-      scale: 1.06;
-    }
-  }
 }
 
 @layer base {
@@ -131,7 +117,8 @@
   .slider {
     appearance: none;
     width: 100%;
-    min-block-size: 1.5rem;
+    /* Área de toque de 44 px, mesmo com o trilho fino */
+    min-block-size: 2.75rem;
     background: transparent;
     cursor: pointer;
     --progresso: 50%;
@@ -200,6 +187,59 @@
     .slider::-webkit-slider-thumb {
       background: Highlight;
     }
+  }
+}
+
+/*
+ * Rua animada do início (HeroStreet): carro e postes sincronizados só com CSS.
+ * Cada poste usa o mesmo ciclo, deslocado pelo instante em que o carro chega.
+ */
+@layer components {
+  .rua-carro {
+    animation: rua-carro var(--rua-duracao) linear infinite;
+  }
+
+  .rua-luz {
+    opacity: var(--rua-luz-baixa);
+    animation: rua-luz var(--rua-duracao) linear infinite both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rua-carro {
+      animation: none;
+      transform: translateX(var(--rua-carro-parado));
+    }
+
+    .rua-luz {
+      animation: none;
+    }
+
+    .rua-luz.perto {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes rua-carro {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--rua-percurso));
+  }
+}
+
+@keyframes rua-luz {
+  0% {
+    opacity: var(--rua-luz-baixa);
+  }
+  4%,
+  31% {
+    opacity: 1;
+  }
+  41%,
+  100% {
+    opacity: var(--rua-luz-baixa);
   }
 }
 

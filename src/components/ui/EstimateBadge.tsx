@@ -23,8 +23,8 @@ const DESCRICAO: Record<Exclude<StatusDado, 'fonte'>, string> = {
 };
 
 /**
- * Selo que sinaliza números que não são fatos medidos. Veja a seção
- * "Metodologia e fontes" para a explicação de cada valor.
+ * Selo que sinaliza números que não são fatos medidos. O "Como calculamos?",
+ * no rodapé, explica cada valor e a sua fonte.
  */
 export function EstimateBadge({ status, tema = 'dia', className }: EstimateBadgeProps) {
   if (status === 'fonte') return null;
@@ -32,7 +32,7 @@ export function EstimateBadge({ status, tema = 'dia', className }: EstimateBadge
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 align-middle font-sans text-[0.6875rem] leading-4 font-semibold tracking-wide whitespace-nowrap uppercase',
+        'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 align-middle font-sans text-[0.8125rem] leading-5 font-semibold whitespace-nowrap',
         tema === 'noite'
           ? 'border-amarelo-luz/60 text-amarelo-luz'
           : 'border-amarelo-profundo/30 bg-amarelo-suave text-amarelo-profundo',

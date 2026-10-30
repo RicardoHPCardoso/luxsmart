@@ -6,7 +6,6 @@ const DESLOCAMENTO = 24;
 const ELEMENTOS = {
   div: motion.div,
   li: motion.li,
-  article: motion.article,
 } as const;
 
 interface RevealProps extends HTMLMotionProps<'div'> {

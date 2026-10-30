@@ -3,7 +3,6 @@
  */
 export const SITE = {
   nome: 'LuxSmart',
-  slogan: 'Luz que reage à presença.',
   descricao:
     'Um poste inteligente que desliga de dia, economiza à noite e acende por completo quando alguém passa.',
   cidade: 'Indaiatuba – SP',

@@ -1,5 +1,5 @@
 /**
- * Parâmetros do SIMULADOR de rua.
+ * Parâmetros da rua do bloco "Simule a economia".
  * Distâncias em "unidades" da rua desenhada (0 a `comprimentoRua`) e tempos
  * em segundos. As velocidades são aceleradas para a demonstração caber em
  * poucos segundos — não representam km/h reais.
@@ -7,8 +7,9 @@
 import { INDAIATUBA } from './indaiatuba';
 
 export const CONFIG_SIMULADOR = {
-  quantidadePostes: 8,
-  comprimentoRua: 1000,
+  quantidadePostes: 5,
+  /** Com 5 postes, 600 unidades mantêm a rua alta o bastante no celular. */
+  comprimentoRua: 600,
   /** Alcance do sensor de presença, medido a partir da luminária. */
   raioDeteccao: 60,
   /** Tempo a 100% depois que o movimento sai do raio ("alguns segundos"). */

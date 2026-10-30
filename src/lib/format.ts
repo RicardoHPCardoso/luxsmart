@@ -66,11 +66,6 @@ export function formatarEnergia(kwh: number): string {
   return `${umaCasaFixa.format(kwh / escala.divisor)} ${escala.unidade}`;
 }
 
-/** Número com exatamente uma casa decimal: 7 → "7,0". */
-export function formatarUmaCasa(valor: number): string {
-  return umaCasaFixa.format(valor);
-}
-
 /** 11.8667 → "11h52min". */
 export function formatarHoras(horasDecimais: number): string {
   let horas = Math.floor(horasDecimais);
@@ -118,26 +113,4 @@ export function formatarDadoReferencia(dado: {
     default:
       return `${formatarNumero(valor, 3)} ${unidade}`;
   }
-}
-
-export interface Escala {
-  divisor: number;
-  unidade: string;
-}
-
-/**
- * Escolhe a unidade de energia para um eixo de gráfico a partir do maior valor
- * (em kWh), para que os rótulos fiquem curtos: kWh, MWh ou GWh.
- */
-export function escalaEnergia(maiorKwh: number): Escala {
-  if (maiorKwh >= 1e6) return { divisor: 1e6, unidade: 'GWh' };
-  if (maiorKwh >= 1e3) return { divisor: 1e3, unidade: 'MWh' };
-  return { divisor: 1, unidade: 'kWh' };
-}
-
-/** Escolhe a unidade de potência para um eixo a partir do maior valor (em kW). */
-export function escalaPotencia(maiorKw: number): Escala {
-  if (maiorKw >= 1e3) return { divisor: 1e3, unidade: 'MW' };
-  if (maiorKw >= 1) return { divisor: 1, unidade: 'kW' };
-  return { divisor: 1e-3, unidade: 'W' };
 }

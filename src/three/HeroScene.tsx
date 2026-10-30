@@ -1,106 +1,67 @@
-import { PerformanceMonitor, Stars } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useCallback, useMemo, useRef, useState, type RefObject } from 'react';
-import {
-  Color,
-  Vector3,
-  type AmbientLight,
-  type DirectionalLight,
-  type Fog,
-  type Group,
-  type Mesh,
-  type MeshBasicMaterial,
-  type MeshStandardMaterial,
-  type Points,
-} from 'three';
-import type { ModoCeu } from '@/components/ui/DayNightToggle';
+import { useCallback, useMemo, useRef } from 'react';
+import { BufferGeometry, Color, Float32BufferAttribute, type Group } from 'three';
+import { aleatorio } from '@/lib/aleatorio';
 import { atualizarPoste, type EstadoPoste } from '@/lib/simulation';
 import { Car } from './Car';
+import { criarMateriaisPostes, type RegistrarMaterial } from './lampMaterials';
 import {
   CAMERA,
   CARRO,
   CORES,
+  ESTRELAS,
   POSICOES_POSTES,
   RAIO_DETECCAO,
   REGRA_POSTE,
-  VELOCIDADE_TRANSICAO_CEU,
 } from './sceneConfig';
 import { Scenery } from './Scenery';
-import { criarMateriaisPostes, type RegistrarMaterial } from './lampMaterials';
 import { StreetLamps } from './StreetLamps';
 import { criarTexturaBrilho, criarTexturaCone } from './textures';
 
 interface HeroSceneProps {
-  modo: ModoCeu;
-  /** Quando falso (hero fora da tela), o laço de renderização para. */
+  /** Quando falso (início fora da tela), o laço de renderização para. */
   ativo: boolean;
   /** Chamado quando a cena está pronta para aparecer. */
   aoPronto?: () => void;
-  /**
-   * Elemento que capta o ponteiro (o hero inteiro). Sem isso, o texto sobre
-   * o canvas bloquearia os eventos e o parallax só funcionaria nas bordas.
-   */
-  fonteEventos?: RefObject<HTMLElement | null>;
 }
 
-/** Faixa de densidade de pixels: nítido em telas retina, mas com teto para manter 60 fps. */
-const DPR_MAXIMO = 1.75;
+/** Teto de densidade de pixels: nítido sem pesar na placa de vídeo. */
+const DPR_MAXIMO = 1.5;
 
 /**
- * Cena 3D do hero: rua noturna low-poly, carro em loop e postes que acendem
- * em sequência. Carregada sob demanda (React.lazy) — este arquivo e o three.js
- * ficam fora do bundle inicial.
+ * Cena 3D do início (só no desktop): rua noturna low-poly, carro em loop e
+ * postes que acendem em sequência. Carregada sob demanda (React.lazy) — este
+ * arquivo e o three.js ficam fora do carregamento inicial.
  */
-export default function HeroScene({ modo, ativo, aoPronto, fonteEventos }: HeroSceneProps) {
-  const [dpr, setDpr] = useState(DPR_MAXIMO);
-
+export default function HeroScene({ ativo, aoPronto }: HeroSceneProps) {
   return (
     <Canvas
       aria-hidden="true"
       frameloop={ativo ? 'always' : 'never'}
-      dpr={[1, dpr]}
+      dpr={[1, DPR_MAXIMO]}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       camera={{ fov: CAMERA.fov, position: [...CAMERA.larga.posicao], near: 0.1, far: 300 }}
       onCreated={() => aoPronto?.()}
-      eventSource={fonteEventos}
-      eventPrefix="client"
     >
-      {/* Se o FPS cair, reduz a resolução em vez de travar a animação. */}
-      <PerformanceMonitor onDecline={() => setDpr(1)} onIncline={() => setDpr(DPR_MAXIMO)} />
-      <Cena modo={modo} />
+      <Cena />
     </Canvas>
   );
 }
 
-function Cena({ modo }: { modo: ModoCeu }) {
+function Cena() {
   const texturaBrilho = useMemo(() => criarTexturaBrilho(), []);
   const texturaCone = useMemo(() => criarTexturaCone(), []);
 
-  // Refs dos objetos animados
   const materiaisPostes = useRef(criarMateriaisPostes());
   const registrarMaterial = useCallback<RegistrarMaterial>((tipo, indice, material) => {
     materiaisPostes.current[tipo][indice] = material;
   }, []);
   const carro = useRef<Group>(null);
-  const farol = useRef<MeshBasicMaterial>(null);
-  const chao = useRef<MeshStandardMaterial>(null);
-  const predios = useRef<MeshStandardMaterial>(null);
-  const janelas = useRef<MeshStandardMaterial>(null);
-  const rua = useRef<MeshStandardMaterial>(null);
-  const calcada = useRef<MeshStandardMaterial>(null);
-  const ambiente = useRef<AmbientLight>(null);
-  const direcional = useRef<DirectionalLight>(null);
-  const neblina = useRef<Fog>(null);
-  const estrelas = useRef<Points>(null);
-  const lua = useRef<Mesh>(null);
-  const sol = useRef<Mesh>(null);
 
-  // Estado da simulação (fora do React: muda a cada quadro)
-  const simulacao = useRef({
-    fatorDia: modo === 'dia' ? 1 : 0,
+  // Estado da animação (fora do React: muda a cada quadro)
+  const animacao = useRef({
     carroX: CARRO.inicioX as number,
     pausa: 0,
-    parallax: new Vector3(),
     postes: POSICOES_POSTES.map<EstadoPoste>((x) => ({
       x,
       nivel: REGRA_POSTE.dimerizacao,
@@ -109,57 +70,13 @@ function Cena({ modo }: { modo: ModoCeu }) {
     })),
   });
 
-  const cores = useMemo(
-    () => ({
-      ceuNoite: new Color(CORES.ceuNoite),
-      ceuDia: new Color(CORES.ceuDia),
-      chaoNoite: new Color(CORES.chaoNoite),
-      chaoDia: new Color(CORES.chaoDia),
-      predioNoite: new Color(CORES.predioNoite),
-      predioDia: new Color(CORES.predioDia),
-      ruaNoite: new Color(CORES.ruaNoite),
-      ruaDia: new Color(CORES.ruaDia),
-      calcadaNoite: new Color(CORES.calcadaNoite),
-      calcadaDia: new Color(CORES.calcadaDia),
-      luarCor: new Color('#8AB0FF'),
-      solCor: new Color('#FFF4D1'),
-      sensor: new Color(CORES.sensor),
-      luz: new Color(CORES.luz),
-      temp: new Color(),
-      alvo: new Vector3(),
-    }),
-    [],
-  );
+  const cores = useMemo(() => ({ sensor: new Color(CORES.sensor), luz: new Color(CORES.luz) }), []);
 
   useFrame((state, delta) => {
-    const s = simulacao.current;
+    const s = animacao.current;
     const dt = Math.min(delta, 0.05);
 
-    // 1. Transição dia ⇄ noite
-    const alvoDia = modo === 'dia' ? 1 : 0;
-    const passoCeu = VELOCIDADE_TRANSICAO_CEU * dt;
-    s.fatorDia += Math.max(-passoCeu, Math.min(passoCeu, alvoDia - s.fatorDia));
-    const f = s.fatorDia;
-    const ehDia = f > 0.5;
-
-    cores.temp.lerpColors(cores.ceuNoite, cores.ceuDia, f);
-    if (state.scene.background instanceof Color) state.scene.background.copy(cores.temp);
-    neblina.current?.color.copy(cores.temp);
-    chao.current?.color.lerpColors(cores.chaoNoite, cores.chaoDia, f);
-    predios.current?.color.lerpColors(cores.predioNoite, cores.predioDia, f);
-    rua.current?.color.lerpColors(cores.ruaNoite, cores.ruaDia, f);
-    calcada.current?.color.lerpColors(cores.calcadaNoite, cores.calcadaDia, f);
-    if (janelas.current) janelas.current.emissiveIntensity = 0.7 * (1 - f);
-    if (ambiente.current) ambiente.current.intensity = 0.35 + 0.9 * f;
-    if (direcional.current) {
-      direcional.current.intensity = 0.35 + 1.6 * f;
-      direcional.current.color.lerpColors(cores.luarCor, cores.solCor, f);
-    }
-    if (estrelas.current) estrelas.current.visible = !ehDia;
-    if (lua.current) lua.current.visible = !ehDia;
-    if (sol.current) sol.current.visible = ehDia;
-
-    // 2. Carro em loop
+    // 1. Carro em loop
     if (s.pausa > 0) {
       s.pausa -= dt;
     } else {
@@ -170,9 +87,8 @@ function Cena({ modo }: { modo: ModoCeu }) {
       }
     }
     carro.current?.position.setX(s.carroX);
-    if (farol.current) farol.current.opacity = 0.55 * (1 - f);
 
-    // 3. Postes: mesma regra do simulador 2D (lib/simulation)
+    // 2. Postes: mesma regra do simulador (lib/simulation)
     const m = materiaisPostes.current;
     s.postes = s.postes.map((poste, i) => {
       const atualizado = atualizarPoste(
@@ -180,7 +96,6 @@ function Cena({ modo }: { modo: ModoCeu }) {
         Math.abs(s.carroX - poste.x) <= RAIO_DETECCAO,
         dt,
         REGRA_POSTE,
-        ehDia,
       );
       const nivel = atualizado.nivel;
       const lente = m.lentes[i];
@@ -192,21 +107,17 @@ function Cena({ modo }: { modo: ModoCeu }) {
       const halo = m.halos[i];
       if (halo) halo.opacity = nivel * 0.9;
       const sensor = m.sensores[i];
-      if (sensor) sensor.emissive.copy(atualizado.detectando && !ehDia ? cores.luz : cores.sensor);
+      if (sensor) sensor.emissive.copy(atualizado.detectando ? cores.luz : cores.sensor);
       return atualizado;
     });
 
-    // 4. Câmera: enquadramento conforme a proporção da tela + parallax do ponteiro
+    // 3. Câmera: enquadramento conforme a proporção da tela
     const proporcao = state.size.width / Math.max(1, state.size.height);
     const t = Math.min(1, Math.max(0, (1.6 - proporcao) / 0.8));
-    const { larga, estreita, parallax } = CAMERA;
-    s.parallax.lerp(
-      cores.alvo.set(state.pointer.x * parallax[0], state.pointer.y * parallax[1], 0),
-      Math.min(1, dt * 2),
-    );
+    const { larga, estreita } = CAMERA;
     state.camera.position.set(
-      larga.posicao[0] + (estreita.posicao[0] - larga.posicao[0]) * t + s.parallax.x,
-      larga.posicao[1] + (estreita.posicao[1] - larga.posicao[1]) * t + s.parallax.y,
+      larga.posicao[0] + (estreita.posicao[0] - larga.posicao[0]) * t,
+      larga.posicao[1] + (estreita.posicao[1] - larga.posicao[1]) * t,
       larga.posicao[2] + (estreita.posicao[2] - larga.posicao[2]) * t,
     );
     state.camera.lookAt(
@@ -218,35 +129,59 @@ function Cena({ modo }: { modo: ModoCeu }) {
 
   return (
     <>
-      <color attach="background" args={[CORES.ceuNoite]} />
-      <fog ref={neblina} attach="fog" args={[CORES.ceuNoite, 30, 110]} />
-      <ambientLight ref={ambiente} intensity={0.35} />
+      <color attach="background" args={[CORES.ceu]} />
+      <fog attach="fog" args={[CORES.ceu, 30, 110]} />
+      <ambientLight intensity={0.35} />
       <hemisphereLight args={['#8AB0FF', '#07101F', 0.35]} />
-      <directionalLight ref={direcional} position={[-12, 20, 8]} intensity={0.35} />
+      <directionalLight position={[-12, 20, 8]} intensity={0.35} color="#8AB0FF" />
 
-      <Stars ref={estrelas} radius={120} depth={40} count={1400} factor={3} fade speed={0.4} />
-      <mesh ref={lua} position={[-34, 15, -80]}>
+      <Estrelas />
+      <mesh position={[-34, 15, -80]}>
         <sphereGeometry args={[2.4, 20, 16]} />
         <meshBasicMaterial color="#F7F9FC" toneMapped={false} fog={false} />
       </mesh>
-      <mesh ref={sol} position={[-34, 17, -80]} visible={false}>
-        <sphereGeometry args={[3.2, 20, 16]} />
-        <meshBasicMaterial color={CORES.luz} toneMapped={false} fog={false} />
-      </mesh>
 
-      <Scenery
-        materialChao={chao}
-        materialPredios={predios}
-        materialJanelas={janelas}
-        materialRua={rua}
-        materialCalcada={calcada}
-      />
+      <Scenery />
       <StreetLamps
         registrar={registrarMaterial}
         texturaBrilho={texturaBrilho}
         texturaCone={texturaCone}
       />
-      <Car grupo={carro} farol={farol} texturaBrilho={texturaBrilho} />
+      <Car grupo={carro} texturaBrilho={texturaBrilho} />
     </>
+  );
+}
+
+/** Céu estrelado: pontos na metade de cima de uma esfera ao redor da cena. */
+function Estrelas() {
+  const geometria = useMemo(() => {
+    const rand = aleatorio(3);
+    const posicoes: number[] = [];
+    for (let i = 0; i < ESTRELAS.quantidade; i++) {
+      const theta = rand() * Math.PI * 2;
+      const altura = 0.08 + rand() * 0.92; // só acima do horizonte
+      const r = Math.sqrt(1 - altura * altura);
+      posicoes.push(
+        ESTRELAS.raio * r * Math.cos(theta),
+        ESTRELAS.raio * altura,
+        ESTRELAS.raio * r * Math.sin(theta),
+      );
+    }
+    const g = new BufferGeometry();
+    g.setAttribute('position', new Float32BufferAttribute(posicoes, 3));
+    return g;
+  }, []);
+
+  return (
+    <points geometry={geometria}>
+      <pointsMaterial
+        color="#FFFFFF"
+        size={ESTRELAS.tamanho}
+        sizeAttenuation={false}
+        transparent
+        opacity={0.8}
+        fog={false}
+      />
+    </points>
   );
 }

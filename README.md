@@ -31,29 +31,30 @@ fluxo atual.
 
 ## Seções do site
 
-| #   | Seção                  | O que mostra                                                                                                                                |
-| --- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Hero 3D                | Rua noturna low-poly; um carro passa e os postes acendem em sequência. Interruptor Dia/Noite.                                               |
-| 2   | O problema             | Números animados sobre a rede de Indaiatuba e a ilustração "energia paga para iluminar ninguém".                                            |
-| 3   | Como funciona          | Seção fixa guiada pelo scroll: Dia → Noite sem movimento → Movimento, com o diagrama do protótipo (LDR + PIR/HC-SR04 → ESP32 → PWM → LEDs). |
-| 4   | Simulador              | Rua 2D com 8 postes: envie carros e pedestres ou clique na rua; medidor de consumo instantâneo.                                             |
-| 5   | Dashboard · Indaiatuba | KPIs e gráficos (3 cenários, consumo acumulado, potência numa noite típica) com filtro por tipo de via.                                     |
-| 6   | Calculadora            | Sliders de postes, potência, movimento, dimerização, tarifa e custo do kit; botão "Aplicar à cidade".                                       |
-| 7   | Benefícios             | Economia, segurança, poluição luminosa, vida útil, dados para a prefeitura, ODS 7 e 11.                                                     |
-| 8   | Roadmap                | Pesquisa → protótipo → testes → piloto em uma rua → expansão.                                                                               |
-| 9   | Equipe                 | Integrantes agrupados por área de atuação, com avatares de iniciais.                                                                        |
-| 10  | Metodologia e fontes   | Fórmulas, premissas e a tabela com todos os dados de referência, fontes e situação de cada um.                                              |
+Uma página curta, com 6 seções:
+
+| #   | Seção                  | O que mostra                                                                                                                |
+| --- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Início                 | "LuxSmart", uma frase e o botão para os resultados. Um carro passa e os postes acendem: 3D no desktop, 2D (CSS) no celular. |
+| 2   | O problema e a solução | Postes a 100% em ruas vazias, 3 números (pontos em LED, % já em LED, economia estimada), a solução e os benefícios.         |
+| 3   | Como funciona          | 3 cards (Dia, Noite sem movimento, Movimento) e a linha LDR + PIR/HC-SR04 → ESP32 → PWM → LEDs, com a função de cada um.    |
+| 4   | Resultados             | 4 indicadores para Indaiatuba (energia, R$, % e CO₂ economizados por ano) e o gráfico de barras dos 3 cenários.             |
+| 5   | Simule a economia      | Rua com 5 postes que reagem ao toque e um slider de movimento: "Economia de X% ≈ R$ Y por ano em Indaiatuba".               |
+| 6   | Equipe                 | Integrantes por área de atuação, com avatares de iniciais.                                                                  |
+
+O rodapé tem o acordeão **"Como calculamos?"**: fórmulas resumidas e todos os dados de referência,
+com valor, situação e fonte.
 
 > **Números honestos:** todo valor que não é um fato publicado aparece no site com o selo
-> **≈ estimativa** (ou **≈ a verificar**) e é explicado na seção "Metodologia e fontes".
+> **≈ estimativa** (ou **≈ a verificar**) e é explicado no "Como calculamos?".
 
 ## Stack
 
 - [Vite](https://vite.dev) + React 19 + TypeScript
 - Tailwind CSS 4 (tokens de cor e fonte em `src/index.css`)
 - Framer Motion (animações) + Lenis (scroll suave)
-- React Three Fiber + drei (cena 3D)
-- Recharts (gráficos) + react-countup (números animados)
+- React Three Fiber (cena 3D do início, só no desktop)
+- react-countup (números animados); o gráfico de barras é feito em HTML/CSS
 - Vitest + Testing Library, ESLint, Prettier
 
 ## Como rodar
@@ -77,19 +78,18 @@ npm run dev        # abre em http://localhost:5173
 
 ## Onde editar os dados
 
-Todos os textos variáveis e números ficam em `src/data/`. Os componentes e gráficos se
+Todos os textos variáveis e números ficam em `src/data/`. Os componentes e o gráfico se
 atualizam sozinhos.
 
 | Arquivo                   | O que muda                                                                                                                                                                     |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `src/data/indaiatuba.ts`  | **Dados de referência**: pontos de LED, horas por noite, tarifa, fator de CO₂, dimerização, custo do kit, potências e movimento por tipo de via, perfil de movimento da noite. |
 | `src/data/hardware.ts`    | Componentes do protótipo (LDR, PIR/HC-SR04, ESP32, LEDs, PWM e Wi-Fi previsto), função, status e a nota sobre a maquete.                                                       |
-| `src/data/etapas.ts`      | Textos dos 3 estados e a cadeia de componentes responsável por cada um.                                                                                                        |
+| `src/data/etapas.ts`      | Os 3 modos do poste (título, resumo, frase e ícone).                                                                                                                           |
 | `src/data/equipe.ts`      | Áreas da equipe e integrantes (nome; `foto`, `github` e `linkedin` opcionais).                                                                                                 |
-| `src/data/roadmap.ts`     | Etapas do roadmap, período e status.                                                                                                                                           |
-| `src/data/beneficios.ts`  | Cards de benefícios.                                                                                                                                                           |
-| `src/data/calculadora.ts` | Limites dos sliders e exemplo inicial da calculadora.                                                                                                                          |
-| `src/data/simulador.ts`   | Raio do sensor, tempo de espera, velocidades e rampas do simulador.                                                                                                            |
+| `src/data/beneficios.ts`  | Chips de benefícios (marque `previsto` no que ainda depende do futuro).                                                                                                        |
+| `src/data/calculadora.ts` | Limites do slider de movimento (e exemplo usado nos testes).                                                                                                                   |
+| `src/data/simulador.ts`   | Quantidade de postes, raio do sensor, tempo de espera e velocidades da rua do "Simule".                                                                                        |
 | `src/data/site.ts`        | Curso, instituição, ano e link do repositório.                                                                                                                                 |
 
 Cada dado de referência tem `valor`, `unidade`, `fonte`, `observacao` e `status`:
@@ -104,7 +104,7 @@ Cada dado de referência tem `valor`, `unidade`, `fonte`, `observacao` e `status
 
 **Pendências para o grupo** (marcadas no próprio arquivo): tarifa B4a vigente da distribuidora,
 fator de emissão atual do MCTI, confirmação das 11h52min na regulamentação da ANEEL, potências
-reais por tipo de via, custo real do kit e medições de movimento do protótipo.
+reais por tipo de via, custo real do kit e medições de movimento da maquete.
 
 ## Como os números são calculados
 
@@ -122,14 +122,14 @@ Exemplo: 20% de movimento e 30% de dimerização → fator 0,44 → **56% de eco
 atual. A economia é calculada contra o LED atual (o kit é instalado sobre luminárias existentes);
 o vapor de sódio aparece só como referência histórica.
 
-| Arquivo                          | Responsabilidade                                                         |
-| -------------------------------- | ------------------------------------------------------------------------ |
-| `src/lib/energy.ts`              | Consumo, fator de uso, custo, CO₂, payback, cenários e série mensal      |
-| `src/lib/nightProfile.ts`        | Potência hora a hora numa noite típica (mesma média do cálculo anual)    |
-| `src/lib/indaiatubaScenarios.ts` | Liga os dados de Indaiatuba às funções (por via e cidade toda)           |
-| `src/lib/calculator.ts`          | Calculadora, "poste médio" da cidade e escala logarítmica do slider      |
-| `src/lib/simulation.ts`          | Regra dos postes (detecção, espera, rampas) — usada no simulador e no 3D |
-| `src/lib/format.ts`              | Formatação pt-BR (moeda, energia, horas, percentuais)                    |
+| Arquivo                          | Responsabilidade                                                                  |
+| -------------------------------- | --------------------------------------------------------------------------------- |
+| `src/lib/energy.ts`              | Consumo, fator de uso, custo, CO₂, payback, cenários e série mensal               |
+| `src/lib/nightProfile.ts`        | Potência hora a hora numa noite típica (não exibida na página; mantida e testada) |
+| `src/lib/indaiatubaScenarios.ts` | Liga os dados de Indaiatuba às funções (por via e cidade toda)                    |
+| `src/lib/calculator.ts`          | "Simule": "poste médio" da cidade e ajuste do valor do slider                     |
+| `src/lib/simulation.ts`          | Regra dos postes (detecção, espera, rampas) — usada no "Simule" e no 3D           |
+| `src/lib/format.ts`              | Formatação pt-BR (moeda, energia, horas, percentuais)                             |
 
 ## Estrutura de pastas
 
@@ -139,10 +139,10 @@ o vapor de sódio aparece só como referência histórica.
 ├── src/
 │   ├── components/       UI reutilizável (botões, sliders, selos, ícones, layout, ilustrações SVG)
 │   ├── data/             ⭐ dados e textos editáveis (veja a tabela acima)
-│   ├── hooks/            hooks (scroll, media queries, visibilidade, modo dia/noite)
+│   ├── hooks/            hooks (scroll, media queries, seção ativa, ociosidade)
 │   ├── lib/              lógica pura + testes (*.test.ts)
-│   ├── sections/         as seções da página (Hero, Problem, HowItWorks, Simulator, Dashboard…)
-│   ├── three/            cena 3D do hero (React Three Fiber)
+│   ├── sections/         as 6 seções (Hero, ProblemSolution, HowItWorks, Results, Simulate, Team)
+│   ├── three/            cena 3D do início (React Three Fiber, só no desktop)
 │   ├── test/             configuração dos testes de componente
 │   ├── App.tsx           ordem das seções
 │   └── index.css         design system (cores, fontes, brilho) com Tailwind 4
@@ -154,18 +154,20 @@ o vapor de sódio aparece só como referência histórica.
 
 - **Testes:** 98 testes (Vitest) — lógica de energia com casos-limite (0% e 100% de movimento,
   dimerização 0 e 1), perfil noturno, simulação, formatação, dados da equipe e do hardware e testes
-  de componente (calculadora, equipe e diagrama do protótipo).
+  de componente (equipe, linha de componentes, "Simule" e "Como calculamos?").
 - **Acessibilidade:** HTML semântico, navegação por teclado com foco visível, link "pular para o
-  conteúdo", `aria-label`/`aria-valuetext` nos controles, tabela de dados para cada gráfico, anúncios
+  conteúdo", `aria-valuetext` no slider, barras do gráfico com nome e valor em texto, anúncios
   para leitores de tela com debounce, contraste AA (amarelo só como fundo/destaque sobre claro).
-  Auditoria com axe-core: 0 violações (desktop e 375 px).
-- **Movimento reduzido:** com `prefers-reduced-motion`, o 3D não é carregado, o scroll suave, o
-  parallax e as animações contínuas são desligados e "Como funciona" vira uma lista estática.
-- **Performance:** a cena 3D (three.js) e os gráficos (Recharts) são carregados sob demanda; o 3D
-  só em telas ≥ 768 px, com o navegador ocioso, e pausa fora da tela. Fontes críticas com preload.
-  Lighthouse medido localmente no build de produção: celular 96 · 100 · 100 · 100 e desktop
+  Auditoria com axe-core: 0 violações (375 e 1440 px).
+- **Mobile first:** texto corrido com no mínimo 16 px (títulos fluidos com `clamp()`), áreas de toque
+  de pelo menos 44 × 44 px, cartões de função que abrem e fecham com toque. Verificado em 360,
+  375, 414, 768, 1024 e 1440 px, sem rolagem horizontal.
+- **Movimento reduzido:** com `prefers-reduced-motion`, o 3D não é carregado, o scroll suave e as
+  animações contínuas são desligados e a rua do início fica parada.
+- **Performance:** no celular não há Three.js — a rua do início é animada só com CSS. No desktop, a
+  cena 3D é baixada com o navegador ocioso e pausa fora da tela. Fontes críticas com preload.
+  Lighthouse medido localmente no build de produção: celular 98 · 100 · 100 · 100 e desktop
   99 · 100 · 100 · 100 (Performance · Acessibilidade · Boas práticas · SEO), CLS 0.
-- **Responsivo:** testado em 375, 768 e 1440 px.
 
 ## Deploy
 
@@ -197,14 +199,17 @@ Podem ser definidas no shell, no painel da Vercel ou em um arquivo `.env` (veja 
 
 ## Decisões técnicas
 
-- **Uma regra de poste para tudo:** o simulador 2D e a cena 3D usam a mesma função
-  (`atualizarPoste`), então o comportamento mostrado é sempre o mesmo e está coberto por testes.
-- **Luz "falsa" no 3D:** cones e poças com mistura aditiva em vez de luzes dinâmicas — visual
-  estilizado a 60 fps; o `PerformanceMonitor` reduz a resolução se o FPS cair.
-- **Paleta dos gráficos validada** para daltonismo e contraste sobre a superfície escura; toda série
-  tem legenda, rótulo direto e tabela, então a cor nunca é o único meio de identificação.
-- **Calculadora coerente com o dashboard:** "Aplicar à cidade" usa um "poste médio" (potência média
-  e movimento ponderado pela energia) que reproduz exatamente os totais do dashboard.
+- **Uma regra de poste para tudo:** o "Simule" e a cena 3D usam a mesma função (`atualizarPoste`),
+  então o comportamento mostrado é sempre o mesmo e está coberto por testes.
+- **Rua do início sem JavaScript de animação:** o carro e os postes são sincronizados só com CSS
+  (cada poste usa o mesmo ciclo, atrasado pelo instante em que o carro chega).
+- **Luz "falsa" no 3D:** cones e poças com mistura aditiva em vez de luzes dinâmicas, com resolução
+  limitada — visual estilizado sem pesar.
+- **Gráfico em HTML/CSS:** 3 barras não justificam uma biblioteca de gráficos; a paleta foi
+  validada para daltonismo e contraste sobre fundo escuro, e cada barra tem nome e valor em texto.
+- **"Simule" coerente com os Resultados:** o slider começa no movimento médio da cidade ("poste
+  médio": potência média e movimento ponderado pela energia), que reproduz exatamente os totais da
+  seção Resultados.
 
 ---
 

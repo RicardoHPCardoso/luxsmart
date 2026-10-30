@@ -1,5 +1,5 @@
 /**
- * Constantes da cena 3D do hero (unidades do three.js ≈ metros).
+ * Constantes da cena 3D do início (unidades do three.js ≈ metros).
  * A rua corre no eixo X; os postes ficam na calçada do fundo (z negativo) e
  * o carro anda na faixa da frente, sempre da esquerda para a direita.
  */
@@ -37,16 +37,11 @@ export const REGRA_POSTE: RegraPoste = {
 };
 
 export const CORES = {
-  ceuNoite: '#060F22',
-  ceuDia: '#9CC3FF',
-  chaoNoite: '#07101F',
-  chaoDia: '#8FA3C4',
-  predioNoite: '#0E2244',
-  predioDia: '#B7CAEA',
-  ruaNoite: '#0B1528',
-  ruaDia: '#5B6B86',
-  calcadaNoite: '#1B2E52',
-  calcadaDia: '#C9D5EA',
+  ceu: '#060F22',
+  chao: '#07101F',
+  predio: '#0E2244',
+  rua: '#0B1528',
+  calcada: '#1B2E52',
   poste: '#2B4170',
   luminaria: '#34507F',
   luz: '#FFC83D',
@@ -58,15 +53,12 @@ export const CORES = {
 
 export const CAMERA = {
   fov: 42,
-  /** Posição e alvo para telas largas (16:9) e estreitas (≈ 4:3 ou retrato). */
+  /** Posição e alvo para telas largas (16:9) e menos largas (≈ 4:3). */
   larga: { posicao: [19, 6.5, 14], alvo: [-3, 2.4, -3] },
   estreita: { posicao: [26, 9, 21], alvo: [-4, 2.4, -3] },
-  /** Amplitude do parallax que segue o ponteiro. */
-  parallax: [0.9, 0.45],
 } as const;
 
-/** Velocidade da transição dia ⇄ noite (fração por segundo). */
-export const VELOCIDADE_TRANSICAO_CEU = 0.9;
+export const ESTRELAS = { quantidade: 600, raio: 120, tamanho: 1.6 } as const;
 
 export const POSICOES_POSTES = Array.from(
   { length: POSTES.quantidade },

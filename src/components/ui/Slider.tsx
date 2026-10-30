@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { LimiteCampo } from '@/data/calculadora';
-import type { EscalaSlider } from '@/lib/calculator';
 
 interface SliderProps {
   id: string;
@@ -8,37 +7,21 @@ interface SliderProps {
   valor: number;
   limite: LimiteCampo;
   aoAlterar: (valor: number) => void;
-  /** Texto exibido e anunciado para o valor (ex.: "30%", "R$ 0,50/kWh"). */
+  /** Texto exibido e anunciado para o valor (ex.: "36%"). */
   formatar: (valor: number) => string;
-  /** Escala não linear (ex.: logarítmica) entre a posição do slider e o valor. */
-  escala?: EscalaSlider;
   /** Dica exibida abaixo do controle e associada via aria-describedby. */
   dica?: ReactNode;
-  /** Controle extra ao lado do valor (ex.: campo numérico). */
-  complemento?: ReactNode;
 }
 
 /**
  * Slider acessível baseado em <input type="range"> nativo: teclado (setas,
- * Page Up/Down, Home/End) e leitores de tela funcionam por padrão.
+ * Page Up/Down, Home/End), toque e leitores de tela funcionam por padrão.
  * `aria-valuetext` faz o leitor anunciar o valor formatado, não o número cru.
  */
-export function Slider({
-  id,
-  rotulo,
-  valor,
-  limite,
-  aoAlterar,
-  formatar,
-  escala,
-  dica,
-  complemento,
-}: SliderProps) {
+export function Slider({ id, rotulo, valor, limite, aoAlterar, formatar, dica }: SliderProps) {
   const idDica = `${id}-dica`;
-  const faixa = escala ?? limite;
-  const posicao = escala ? escala.paraPosicao(valor) : valor;
   const progresso =
-    faixa.max === faixa.min ? 0 : ((posicao - faixa.min) / (faixa.max - faixa.min)) * 100;
+    limite.max === limite.min ? 0 : ((valor - limite.min) / (limite.max - limite.min)) * 100;
   const texto = formatar(valor);
 
   return (
@@ -47,31 +30,25 @@ export function Slider({
         <label htmlFor={id} className="font-semibold">
           {rotulo}
         </label>
-        <div className="flex items-center gap-2">
-          {complemento}
-          <output htmlFor={id} className="font-semibold text-amarelo-luz tabular-nums">
-            {texto}
-          </output>
-        </div>
+        <output htmlFor={id} className="text-xl font-semibold text-amarelo-luz tabular-nums">
+          {texto}
+        </output>
       </div>
       <input
         id={id}
         type="range"
-        min={faixa.min}
-        max={faixa.max}
-        step={faixa.passo}
-        value={posicao}
-        onChange={(e) => {
-          const bruto = Number(e.target.value);
-          aoAlterar(escala ? escala.paraValor(bruto) : bruto);
-        }}
+        min={limite.min}
+        max={limite.max}
+        step={limite.passo}
+        value={valor}
+        onChange={(e) => aoAlterar(Number(e.target.value))}
         aria-valuetext={texto}
         aria-describedby={dica ? idDica : undefined}
-        className="slider mt-3"
+        className="slider mt-2"
         style={{ '--progresso': `${progresso}%` } as CSSProperties}
       />
       {dica && (
-        <p id={idDica} className="mt-1 text-sm text-nevoa">
+        <p id={idDica} className="mt-1 text-nevoa">
           {dica}
         </p>
       )}

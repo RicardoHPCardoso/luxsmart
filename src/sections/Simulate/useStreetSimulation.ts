@@ -47,7 +47,5 @@ export function useStreetSimulation(
     [cfg],
   );
 
-  const limpar = useCallback(() => setEstado(criarEstadoInicial(cfg)), [cfg]);
-
-  return { estado, adicionar, limpar, emAndamento };
+  return { estado, adicionar };
 }

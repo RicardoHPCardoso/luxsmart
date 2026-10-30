@@ -1,7 +1,7 @@
 /**
  * COMPONENTES DE HARDWARE do protótipo (maquete) do LuxSmart.
- * Exibidos no diagrama "Como funciona". Para trocar ou ajustar um componente,
- * edite só este arquivo — diagrama, etapas e textos se atualizam sozinhos.
+ * Exibidos na linha de componentes de "Como funciona". Para trocar ou ajustar
+ * um componente, edite só este arquivo — a página se atualiza sozinha.
  */
 import type { NomeIcone } from '@/components/icons/icons';
 
@@ -96,7 +96,5 @@ export const FLUXO_PRINCIPAL: readonly IdComponente[] = ['ldr', 'presenca', 'esp
 
 /** Como a demonstração física é feita (exibido em "Como funciona"). */
 export const PROTOTIPO = {
-  titulo: 'Demonstração em maquete',
-  descricao:
-    'A demonstração física é uma maquete em escala: LEDs representam os postes e o ESP32 controla o brilho de cada um por PWM, a partir das leituras do LDR e do sensor de presença.',
+  descricao: 'Na apresentação usamos uma maquete em escala: LEDs representam os postes.',
 } as const;

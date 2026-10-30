@@ -1,6 +1,6 @@
 import { cn } from '@/lib/cn';
 
-export type VarianteBotao = 'luz' | 'contorno' | 'fantasma';
+export type VarianteBotao = 'luz' | 'contorno';
 export type TamanhoBotao = 'md' | 'lg';
 
 export interface EstiloBotao {
@@ -15,7 +15,6 @@ const VARIANTES: Record<VarianteBotao, string> = {
   // Amarelo como FUNDO, texto azul-noite: contraste AA garantido.
   luz: 'bg-amarelo-luz text-azul-noite shadow-glow-sm hover:shadow-glow',
   contorno: 'border-2 border-current bg-transparent hover:border-amarelo-luz hover:bg-white/5',
-  fantasma: 'bg-transparent underline-offset-4 hover:underline',
 };
 
 const TAMANHOS: Record<TamanhoBotao, string> = {

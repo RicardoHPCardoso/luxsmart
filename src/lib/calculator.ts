@@ -52,36 +52,3 @@ export function ajustarAoLimite(valor: number, limite: LimiteCampo): number {
   // toFixed evita resíduos de ponto flutuante (ex.: 0.30000000000000004).
   return Number((limite.min + passos * limite.passo).toFixed(6));
 }
-
-export interface EscalaSlider {
-  min: number;
-  max: number;
-  passo: number;
-  paraPosicao: (valor: number) => number;
-  paraValor: (posicao: number) => number;
-}
-
-/**
- * Escala logarítmica para sliders com faixa muito ampla (ex.: 1 a 40.000
- * postes): dá precisão nos valores pequenos sem perder o alcance.
- */
-export function criarEscalaLog(min: number, max: number, divisoes = 1000): EscalaSlider {
-  if (!(min > 0) || !(max > min)) {
-    throw new RangeError('A escala logarítmica exige 0 < min < max.');
-  }
-  const logMin = Math.log10(min);
-  const logMax = Math.log10(max);
-  return {
-    min: 0,
-    max: divisoes,
-    passo: 1,
-    paraPosicao: (valor) => {
-      const v = Math.min(max, Math.max(min, valor));
-      return Math.round(((Math.log10(v) - logMin) / (logMax - logMin)) * divisoes);
-    },
-    paraValor: (posicao) => {
-      const p = Math.min(divisoes, Math.max(0, posicao));
-      return Math.round(10 ** (logMin + (p / divisoes) * (logMax - logMin)));
-    },
-  };
-}

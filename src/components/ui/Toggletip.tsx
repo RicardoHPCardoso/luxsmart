@@ -142,7 +142,7 @@ export function Toggletip({ children, conteudo, className, style }: ToggletipPro
         ref={cartao}
         id={id}
         popover="auto"
-        className="fixed [inset:auto] m-0 w-64 max-w-[calc(100vw-1rem)] rounded-xl border border-amarelo-luz/50 bg-azul-profundo p-4 text-left text-sm text-white shadow-glow"
+        className="fixed [inset:auto] m-0 w-72 max-w-[calc(100vw-1rem)] rounded-xl border border-amarelo-luz/50 bg-azul-profundo p-4 text-left text-base text-white shadow-glow"
         onPointerEnter={cancelarFechamento}
         onPointerLeave={fecharDepois}
       >

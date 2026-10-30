@@ -1,16 +1,8 @@
-import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
+import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from 'framer-motion';
 import { useEffect, useId, useState, type MouseEvent } from 'react';
 import { Logo } from '@/components/brand/Logo';
 import { NAVEGACAO, SECOES } from '@/data/navegacao';
 import { useActiveSection } from '@/hooks/useActiveSection';
-import { useModoCeu } from '@/hooks/modoCeu';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { cn } from '@/lib/cn';
 
@@ -19,8 +11,9 @@ const LIMIAR_FUNDO = 24;
 const IDS_SECOES = NAVEGACAO.map((item) => item.id);
 
 /**
- * Cabeçalho fixo. A barra amarela no topo é a "luz" do progresso de leitura,
- * e o brilho do logo aumenta conforme o usuário avança na página.
+ * Cabeçalho fixo: logo + links para as seções. No celular, menu hambúrguer
+ * (fecha ao escolher um link ou com Esc). A barra amarela no topo mostra o
+ * progresso da leitura.
  */
 export function Header() {
   const { scrollY, scrollYProgress } = useScroll();
@@ -29,12 +22,7 @@ export function Header() {
   const idMenu = useId();
   const secaoAtiva = useActiveSection(IDS_SECOES);
   const { aoClicarAncora } = useScrollTo();
-  const { modo } = useModoCeu();
-  // Transparente sobre o hero em modo dia: textos escuros para contrastar com o céu claro.
-  const sobreCeuDia = modo === 'dia' && !comFundo && !menuAberto;
-
   const progresso = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
-  const brilhoLogo = useTransform(scrollYProgress, [0, 1], [0.35, 1]);
 
   useMotionValueEvent(scrollY, 'change', (y) => setComFundo(y > LIMIAR_FUNDO));
 
@@ -53,8 +41,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300',
-        sobreCeuDia ? 'tema-dia' : 'tema-noite',
+        'tema-noite fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-300',
         comFundo || menuAberto
           ? 'bg-azul-noite/95 shadow-[0_1px_0_rgb(255_255_255/0.06)] backdrop-blur-md'
           : 'bg-transparent',
@@ -66,37 +53,31 @@ export function Header() {
         style={{ scaleX: progresso }}
       />
 
-      <div className="container-site flex h-16 items-center justify-between gap-6 sm:h-18">
+      <div className="container-site flex h-16 items-center justify-between gap-6">
         <a
           href={`#${SECOES.inicio}`}
           onClick={navegar}
-          className="rounded-lg"
+          className="inline-flex min-h-11 items-center rounded-lg"
           aria-label="LuxSmart — voltar ao início"
         >
-          <Logo brilho={brilhoLogo} tema={sobreCeuDia ? 'dia' : 'noite'} />
+          <Logo />
         </a>
 
         <nav aria-label="Principal" className="hidden lg:block">
           <ul className="flex items-center gap-1">
-            {NAVEGACAO.filter((item) => item.destaque).map((item) => (
+            {NAVEGACAO.map((item) => (
               <li key={item.id}>
                 <a
                   href={`#${item.id}`}
                   onClick={navegar}
                   aria-current={secaoAtiva === item.id ? 'location' : undefined}
-                  className={cn(
-                    'relative rounded-full px-3 py-2 text-sm font-medium transition-colors',
-                    sobreCeuDia
-                      ? 'text-tinta-suave hover:text-tinta aria-[current=location]:text-tinta'
-                      : 'text-nevoa hover:text-white aria-[current=location]:text-white',
-                  )}
+                  className="relative inline-flex min-h-11 items-center rounded-full px-3 font-medium text-nevoa transition-colors hover:text-white aria-[current=location]:text-white"
                 >
                   {item.rotulo}
                   {secaoAtiva === item.id && (
-                    <motion.span
-                      layoutId="nav-luz"
+                    <span
                       aria-hidden="true"
-                      className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-amarelo-luz shadow-glow-sm"
+                      className="absolute inset-x-3 bottom-1.5 h-0.5 rounded-full bg-amarelo-luz shadow-glow-sm"
                     />
                   )}
                 </a>
@@ -107,10 +88,7 @@ export function Header() {
 
         <button
           type="button"
-          className={cn(
-            'inline-flex min-h-11 min-w-11 items-center justify-center rounded-full lg:hidden',
-            sobreCeuDia ? 'text-tinta' : 'text-white',
-          )}
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-white lg:hidden"
           aria-expanded={menuAberto}
           aria-controls={idMenu}
           onClick={() => setMenuAberto((aberto) => !aberto)}
@@ -131,14 +109,14 @@ export function Header() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
           >
-            <ul className="container-site grid gap-1 py-4">
+            <ul className="container-site grid gap-1 py-3">
               {NAVEGACAO.map((item) => (
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}
                     onClick={navegar}
                     aria-current={secaoAtiva === item.id ? 'location' : undefined}
-                    className="flex min-h-11 items-center rounded-lg px-3 text-base font-medium text-nevoa hover:bg-white/5 hover:text-white aria-[current=location]:text-amarelo-luz"
+                    className="flex min-h-12 items-center rounded-lg px-3 text-lg font-medium text-nevoa hover:bg-white/5 hover:text-white aria-[current=location]:text-amarelo-luz"
                   >
                     {item.rotulo}
                   </a>

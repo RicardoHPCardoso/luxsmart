@@ -1,15 +1,7 @@
-import { useLayoutEffect, useMemo, useRef, type Ref } from 'react';
-import { Object3D, type InstancedMesh, type MeshStandardMaterial } from 'three';
+import { useLayoutEffect, useMemo, useRef } from 'react';
+import { Object3D, type InstancedMesh } from 'three';
+import { aleatorio } from '@/lib/aleatorio';
 import { CORES, POSICOES_POSTES, POSTES } from './sceneConfig';
-
-/** Gerador pseudoaleatório determinístico (mesma cidade em todo carregamento). */
-function aleatorio(semente: number) {
-  let s = semente;
-  return () => {
-    s = (s * 16807) % 2147483647;
-    return s / 2147483647;
-  };
-}
 
 interface Caixa {
   x: number;
@@ -46,23 +38,8 @@ function gerarCidade() {
   return { predios, janelas };
 }
 
-interface ScenaryProps {
-  /** Materiais que mudam entre dia e noite (controlados pela cena). */
-  materialChao: Ref<MeshStandardMaterial>;
-  materialPredios: Ref<MeshStandardMaterial>;
-  materialJanelas: Ref<MeshStandardMaterial>;
-  materialRua: Ref<MeshStandardMaterial>;
-  materialCalcada: Ref<MeshStandardMaterial>;
-}
-
-/** Chão, rua, calçadas, prédios low-poly e árvores. */
-export function Scenery({
-  materialChao,
-  materialPredios,
-  materialJanelas,
-  materialRua,
-  materialCalcada,
-}: ScenaryProps) {
+/** Chão, rua, calçada, prédios low-poly e árvores. */
+export function Scenery() {
   const { predios, janelas } = useMemo(() => gerarCidade(), []);
   const refPredios = useRef<InstancedMesh>(null);
   const refJanelas = useRef<InstancedMesh>(null);
@@ -99,18 +76,17 @@ export function Scenery({
       {/* Chão */}
       <mesh rotation-x={-Math.PI / 2} position-y={-0.01} receiveShadow={false}>
         <planeGeometry args={[240, 240]} />
-        <meshStandardMaterial ref={materialChao} color={CORES.chaoNoite} flatShading />
+        <meshStandardMaterial color={CORES.chao} flatShading />
       </mesh>
 
-      {/* Rua e calçadas */}
+      {/* Rua e calçada */}
       <mesh rotation-x={-Math.PI / 2} position={[0, 0.005, 1.4]}>
         <planeGeometry args={[120, 7]} />
-        <meshStandardMaterial ref={materialRua} color={CORES.ruaNoite} roughness={0.9} />
+        <meshStandardMaterial color={CORES.rua} roughness={0.9} />
       </mesh>
-      {/* As duas calçadas compartilham o material (a cor muda entre dia e noite). */}
       <mesh position={[0, 0.09, POSTES.zTronco - 0.1]}>
         <boxGeometry args={[120, 0.18, 2.2]} />
-        <meshStandardMaterial ref={materialCalcada} color={CORES.calcadaNoite} flatShading />
+        <meshStandardMaterial color={CORES.calcada} flatShading />
       </mesh>
       <instancedMesh ref={refFaixas} args={[undefined, undefined, faixas.length]}>
         <boxGeometry args={[1, 0.01, 1]} />
@@ -120,12 +96,11 @@ export function Scenery({
       {/* Prédios e janelas */}
       <instancedMesh ref={refPredios} args={[undefined, undefined, predios.length]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial ref={materialPredios} color={CORES.predioNoite} flatShading />
+        <meshStandardMaterial color={CORES.predio} flatShading />
       </instancedMesh>
       <instancedMesh ref={refJanelas} args={[undefined, undefined, janelas.length]}>
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
-          ref={materialJanelas}
           color="#1a2a48"
           emissive={CORES.luz}
           emissiveIntensity={0.7}
@@ -138,7 +113,7 @@ export function Scenery({
         <group key={x} position={[x + POSTES.espacamento / 2, 0, POSTES.zTronco - 0.5]}>
           <mesh position-y={0.8}>
             <cylinderGeometry args={[0.1, 0.14, 1.6, 6]} />
-            <meshStandardMaterial color={CORES.calcadaNoite} flatShading />
+            <meshStandardMaterial color={CORES.calcada} flatShading />
           </mesh>
           <mesh position-y={2.3}>
             <coneGeometry args={[0.9, 2.2, 7]} />
