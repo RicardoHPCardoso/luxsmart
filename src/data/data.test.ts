@@ -3,7 +3,6 @@ import { EQUIPE } from './equipe';
 import { ETAPAS } from './etapas';
 import { INDAIATUBA } from './indaiatuba';
 import { COMPONENTES, FLUXO_PRINCIPAL, HARDWARE, PROTOTIPO } from './hardware';
-import { ROADMAP } from './roadmap';
 
 describe('hardware do protótipo', () => {
   it('lista os 6 componentes reais, na ordem da tabela do grupo', () => {
@@ -35,7 +34,7 @@ describe('hardware do protótipo', () => {
   });
 
   it('não volta a citar componentes antigos/placeholder', () => {
-    const texto = JSON.stringify({ HARDWARE, ETAPAS, ROADMAP, PROTOTIPO });
+    const texto = JSON.stringify({ HARDWARE, ETAPAS, PROTOTIPO });
     expect(texto).not.toMatch(/BH1750|RCWL|radar|HC-SR501|0–10 V|driver|microcontrolador/i);
   });
 });

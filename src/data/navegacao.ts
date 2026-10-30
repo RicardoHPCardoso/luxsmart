@@ -8,9 +8,6 @@ export const SECOES = {
   resultados: 'resultados',
   simule: 'simule',
   equipe: 'equipe',
-  // Seções antigas, removidas ao longo da simplificação.
-  roadmap: 'roadmap',
-  metodologia: 'metodologia',
 } as const;
 
 export type IdSecao = (typeof SECOES)[keyof typeof SECOES];
