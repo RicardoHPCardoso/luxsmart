@@ -42,7 +42,7 @@ export function Section({
       className={cn(
         'relative scroll-mt-20',
         TEMAS[tema],
-        !semPadding && 'py-20 sm:py-28',
+        !semPadding && 'py-16 sm:py-20',
         className,
       )}
       {...props}

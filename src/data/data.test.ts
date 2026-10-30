@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EQUIPE } from './equipe';
 import { ETAPAS } from './etapas';
+import { INDAIATUBA } from './indaiatuba';
 import { COMPONENTES, FLUXO_PRINCIPAL, HARDWARE, PROTOTIPO } from './hardware';
 import { ROADMAP } from './roadmap';
 
@@ -40,20 +41,21 @@ describe('hardware do protótipo', () => {
 });
 
 describe('etapas', () => {
-  it('só usam componentes do fluxo principal (nunca o Wi-Fi previsto)', () => {
-    for (const etapa of ETAPAS) {
-      [...etapa.ativos, ...etapa.cadeia.map((p) => p.componente)].forEach((id) =>
-        expect(FLUXO_PRINCIPAL).toContain(id),
-      );
-    }
+  it('vão de desligado (dia) a luz fraca (noite) e 100% (movimento)', () => {
+    expect(ETAPAS.map((e) => e.id)).toEqual(['dia', 'noite', 'movimento']);
+    expect(ETAPAS.map((e) => e.intensidade)).toEqual([0, INDAIATUBA.dimerizacao.valor, 1]);
   });
 
-  it('cada estado aponta o componente responsável', () => {
+  it('cada modo cita o componente responsável e não menciona o Wi-Fi previsto', () => {
     const [dia, noite, movimento] = ETAPAS;
-    expect(dia?.cadeia.map((p) => p.componente)).toEqual(['ldr', 'esp32']);
-    expect(noite?.cadeia.at(-1)?.componente).toBe('pwm');
-    expect(movimento?.cadeia.map((p) => p.componente)).toEqual(['presenca', 'pwm']);
-    expect(movimento?.cadeia.at(-1)?.acao).toMatch(/100%/);
+    expect(dia?.descricao).toMatch(/LDR/);
+    expect(noite?.descricao).toMatch(/PWM/);
+    expect(movimento?.descricao).toMatch(/sensor de presença/);
+    ETAPAS.forEach((e) => expect(e.descricao).not.toMatch(/Wi-Fi/));
+  });
+
+  it('as frases são curtas (cabem em até 2 linhas)', () => {
+    ETAPAS.forEach((e) => expect(e.descricao.length).toBeLessThanOrEqual(90));
   });
 });
 

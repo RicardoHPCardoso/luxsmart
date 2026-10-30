@@ -10,7 +10,6 @@ export const SECOES = {
   equipe: 'equipe',
   // Seções antigas, removidas ao longo da simplificação.
   calculadora: 'calculadora',
-  beneficios: 'beneficios',
   roadmap: 'roadmap',
   metodologia: 'metodologia',
 } as const;
